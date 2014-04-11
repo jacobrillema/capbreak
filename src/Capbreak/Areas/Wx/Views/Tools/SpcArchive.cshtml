@@ -1,0 +1,341 @@
+﻿@using System.Globalization
+
+@{
+    ViewBag.Title = "Spc Mesoanalysis Archive";
+}
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+
+<h2>Spc Mesoanalysis Archive</h2>
+
+<style type="text/css">
+    body {
+        font-family: "Verdana";
+        font-size: 10pt;
+    }
+
+    table#times tr td {
+        width: 29px;
+        color: #357EC7;
+        cursor: pointer;
+        text-align: center;
+        font-family: "Verdana";
+        font-size: 10pt;
+    }
+
+    .navigation {
+        width: 800px;
+    }
+
+    .innernav {
+        margin: 10px 300px;
+    }
+
+    .innerparameter {
+        margin: 10px 100px;
+    }
+
+    .innerdate {
+        margin: 10px 100px;
+    }
+
+    .datepicker {
+        width: 800px;
+    }
+
+    .parameter {
+        width: 800px;
+    }
+</style>
+
+<div id="spc" width="600">
+    <div id="spcContent">
+        <img id="spcImage" width="800px" height="600px" src="" />
+    </div>
+    <div id="spcFooter">
+        <table id="times">
+            <tr>
+                @for (var i = 0; i < 24; i++)
+                {
+                    var num = (i < 10) ? "0" + i : i.ToString(CultureInfo.InvariantCulture);
+                    <td>
+                        <span id="@("time" + num)">@num</span>
+                    </td>
+                }
+            </tr>
+        </table>
+        <div class="navigation">
+            <div class="innernav">
+                <input type="button" id="prev" value="Previous" />
+                <input type="button" id="next" value="Next" />
+            </div>
+        </div>
+        <div class="datepicker">
+            <div class="innerdate">
+                <span>Year:</span>
+                <select id="year">
+                    @for (var year = 2005; year < DateTime.Now.Year + 1; year++)
+                    {
+                        <option value="@year">@year</option>
+                    }
+                </select>
+                <span>Month:</span>
+                <select id="month">
+                    <option value="0">Jan</option>
+                    <option value="1">Feb</option>
+                    <option value="2">Mar</option>
+                    <option value="3">Apr</option>
+                    <option value="4">May</option>
+                    <option value="5">Jun</option>
+                    <option value="6">Jul</option>
+                    <option value="7">Aug</option>
+                    <option value="8">Sep</option>
+                    <option value="9">Oct</option>
+                    <option value="10">Nov</option>
+                    <option value="11">Dec</option>
+                </select>
+                <span>Day:</span>
+                <select id="day">
+                    <option value="01"> 1</option>
+                    <option value="02"> 2</option>
+                    <option value="03"> 3</option>
+                    <option value="04"> 4</option>
+                    <option value="05"> 5</option>
+                    <option value="06"> 6</option>
+                    <option value="07"> 7</option>
+                    <option value="08"> 8</option>
+                    <option value="09"> 9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+                </select>
+                <span>Time:</span>
+                <select id="hour">
+                    <option value="00">00z</option>
+                    <option value="01">01z</option>
+                    <option value="02">02z</option>
+                    <option value="03">03z</option>
+                    <option value="04">04z</option>
+                    <option value="05">05z</option>
+                    <option value="06">06z</option>
+                    <option value="07">07z</option>
+                    <option value="08">08z</option>
+                    <option value="09">09z</option>
+                    <option value="10">10z</option>
+                    <option value="11">11z</option>
+                    <option value="12">12z</option>
+                    <option value="13">13z</option>
+                    <option value="14">14z</option>
+                    <option value="15">15z</option>
+                    <option value="16">16z</option>
+                    <option value="17">17z</option>
+                    <option value="18">18z</option>
+                    <option value="19">19z</option>
+                    <option value="20">20z</option>
+                    <option value="21">21z</option>
+                    <option value="22">22z</option>
+                    <option value="23">23z</option>
+                </select>
+                <input type="button" id="retrieve" value="Retrieve" />
+            </div>
+        </div>
+        <div class="parameter">
+            <div class="innerparameter">
+                <span>Parameter:</span>
+                <select id="parameter">
+                    <option value="bigsfc.gif">------------------------- Parameter Selection -------------------</option>
+                    <option value="bigsfc.gif">---------------------------- Observations -----------------------------</option>
+                    <option value="bigsfc.gif">Regional Surface Chart</option>
+                    <option value="1kmv.gif">Visible Satellite Image</option>
+                    <option value="rgnlrad.gif">Base Reflectivity Mosaic</option>
+                    <option value="rgnlwarn.gif">Watch/Warning Summary</option>
+                    <option value="pmsl.gif">------------------------------- Basic Surface ---------------------------</option>
+                    <option value="pmsl.gif">MSL Pressure/Wind</option>
+                    <option value="ttd.gif">T / Td / Wind</option>
+                    <option value="mcon.gif">Moisture Convergence</option>
+                    <option value="thea.gif">ThetaE Advection</option>
+                    <option value="pchg.gif">2hr Pres Change</option>
+                    <option value="850mb.gif">-------------------------- Basic UA/Forcing Fields -------------------------</option>
+                    <option value="850mb.gif">850 mb</option>
+                    <option value="700mb.gif">700 mb</option>
+                    <option value="500mb.gif">500 mb</option>
+                    <option value="300mb.gif">300 mb</option>
+                    <option value="dlcp.gif">Deep Moisture Conv</option>
+                    <option value="sfnt.gif">Surface Frontogenesis</option>
+                    <option value="tadv.gif">850 mb Temperature Advection</option>
+                    <option value="8fnt.gif">850 mb Frontogenesis</option>
+                    <option value="7fnt.gif">700 mb Frontogenesis</option>
+                    <option value="857f.gif">850-700 mb Frontogenesis</option>
+                    <option value="75ft.gif">700-500 mb Frontogenesis</option>
+                    <option value="vadv.gif">700-400 mb Diff. Vorticity Advection</option>
+                    <option value="padv.gif">400-250 mb Pot. Vorticity Advection</option>
+                    <option value="ddiv.gif">850-250 mb Diff. Divergence</option>
+                    <option value="ageo.gif">300 mb Jet Circulation</option>
+                    <option value="sbcp.gif">----------------------- Thermodynamic Fields -----------------------------</option>
+                    <option value="sbcp.gif">SBCape / Cin</option>
+                    <option value="mlcp.gif">100 mb MLCape</option>
+                    <option value="mucp.gif">MUCape / LPL Height</option>
+                    <option value="muli.gif">SB Lifted Index / CINH</option>
+                    <option value="laps.gif">Mid Level Lapse Rates</option>
+                    <option value="lllr.gif">Low Level Lapse Rates</option>
+                    <option value="ncap.gif">Normalized Cape</option>
+                    <option value="dcape.gif">Downdraft Cape</option>
+                    <option value="lfch.gif">LFC Height</option>
+                    <option value="lclh.gif">LCL Height</option>
+                    <option value="lfrh.gif">LCL - LFC RH</option>
+                    <option value="mnwd.gif">------------------------------- Wind Shear ------------------------------------</option>
+                    <option value="mnwd.gif">850-300mb Mean Wind</option>
+                    <option value="shr6.gif">0-6km Shear Vector</option>
+                    <option value="shr8.gif">0-8km Shear Vector</option>
+                    <option value="eshr.gif">Effective Shear</option>
+                    <option value="brns.gif">BRN Shear</option>
+                    <option value="srh1.gif">0-1km SR Helicity</option>
+                    <option value="srh3.gif">0-3km SR Helicity</option>
+                    <option value="esrh.gif">Effictive SR Helicity</option>
+                    <option value="shr1.gif">0-1km Shear Vector</option>
+                    <option value="xover.gif">850 & 500 mb winds</option>
+                    <option value="llsr.gif">------------------------- Storm Relative Winds ----------------</option>
+                    <option value="llsr.gif">0-2km SR Winds</option>
+                    <option value="mlsr.gif">4-6km SR Winds</option>
+                    <option value="hlsr.gif">9-11km SR Winds</option>
+                    <option value="alsr.gif">Anvil Level SR Winds</option>
+                    <option value="scp.gif">------------------------- Composite Indicies --------------------</option>
+                    <option value="scp.gif">Supercell Composite</option>
+                    <option value="lscp.gif">Supercell Composite (left-moving)</option>
+                    <option value="stor.gif">Significant Tornado (fixed layer)</option>
+                    <option value="stpc.gif">Sig. Tor. (effective layer)</option>
+                    <option value="sigh.gif">Significant Hail Param.</option>
+                    <option value="dcp.gif">Decrecho Composite</option>
+                    <option value="cbsig.gif">Craven/Brooks SigSvr</option>
+                    <option value="ehi3.gif">3km EHI</option>
+                    <option value="ehi1.gif">1km EHI</option>
+                    <option value="vgp3.gif">3km VGP</option>
+                    <option value="mcsm.gif">MCS maintenance prob.</option>
+                    <option value="cpsh.gif">-------------------------- Multi-Parameter Fields ------------------</option>
+                    <option value="cpsh.gif">MUCAPE & effective bulk shear</option>
+                    <option value="comp.gif">MULI, 850 & 500 mb winds</option>
+                    <option value="lcls.gif">LCL hght/0-1 km SRH</option>
+                    <option value="lr3c.gif">0-3 km LR/0-3 km MLCAPE</option>
+                    <option value="3cvr.gif">3km Cape & Sfc Vorticity</option>
+                    <option value="tdlr.gif">sfc dewpoint/700-500 mb LR</option>
+                    <option value="hail.gif">Hail Parameters</option>
+                    <option value="pwtr.gif">------------------------- Heavy Rainfall --------------------------</option>
+                    <option value="pwtr.gif">Precipitable Water</option>
+                    <option value="tran.gif">850 mb Moisture Transport</option>
+                    <option value="prop.gif">Upwind Propagation Vector</option>
+                    <option value="swbt.gif">------------------------- Winter Weather --------------------------</option>
+                    <option value="swbt.gif">Surface Wet Bulb Temperature</option>
+                    <option value="fzlv.gif">Freezing Level Info.</option>
+                    <option value="thck.gif">Critical Thickness</option>
+                    <option value="epvl.gif">800-750 mb EPVg</option>
+                    <option value="epvm.gif">650-500 mb EPVg</option>
+                    <option value="les1.gif">Lake Effect Snow 1</option>
+                    <option value="les2.gif">Lake Effect Snow 2</option>
+                    <option value="sfir.gif">------------------------- Fire Weather ------------------------------</option>
+                    <option value="sfir.gif">Surface RH, Temperature, Wind</option>
+                    <option value="fosb.gif">Fosberg Index</option>
+                    <option value="lhan.gif">Low Altitude Haines Index</option>
+                    <option value="mhan.gif">Mid Altitude Haines Index</option>
+                    <option value="hhan.gif">High Altitude Haines Index</option>
+                    <option value="lasi.gif">Lower Atmos. Severity Index</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var currentDate = new Date();
+    var targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), currentDate.getHours());
+    var baseURL = 'http://www.spc.noaa.gov/exper/ma_archive/images_s4/{YYYY}{MM}{DD}/{HH}_{PARAM}';
+
+    // Extend to add hours to the Date object
+    Date.prototype.addHours = function (h) {
+        this.setHours(this.getHours() + h);
+        return this;
+    }
+
+    function AddClickEvent() {
+        $('span').click(function () {
+            var hour = this.innerHTML.replace('[', '').replace(']', '');
+            targetDate.setHours(hour);
+            SwapImage('spcImage', BuildURL(baseURL, targetDate), targetDate.getHours());
+        });
+    }
+
+    function BuildURL(oldURL, date) {
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        var day = date.getDate();
+        var hour = date.getHours();
+        var param = $('select#parameter').val();
+        var newURL = oldURL;
+
+        // Increment month by one, since it is zero based.
+        month++;
+
+        // Need to convert to string and add a leading zero.
+        month = month < 10 ? '0' + month : month;
+        day = day < 10 ? '0' + day : day;
+        hour = hour < 10 ? '0' + hour : hour;
+
+        newURL = newURL.replace('{YYYY}', year);
+        newURL = newURL.replace('{MM}', month);
+        newURL = newURL.replace('{DD}', day);
+        newURL = newURL.replace('{HH}', hour);
+        newURL = newURL.replace('{PARAM}', param);
+        return newURL;
+    }
+
+    function SwapImage(id, url, hour) {
+        $('img#' + id).attr('src', url);
+        hour = hour < 10 ? '0' + hour : hour;
+        $('table#times').html($('table#times').html().replace('[', '').replace(']', ''));
+        $('span#time' + hour).text('[' + hour + ']');
+        AddClickEvent(); // Need this here, since the HTML is being dynamically rewritten by this function
+    }
+
+    $('input#prev').click(function () {
+        targetDate = targetDate.addHours(-1);
+        SwapImage('spcImage', BuildURL(baseURL, targetDate), targetDate.getHours());
+    });
+
+    $('input#next').click(function () {
+        targetDate = targetDate.addHours(1);
+        SwapImage('spcImage', BuildURL(baseURL, targetDate), targetDate.getHours());
+    });
+
+    $('select#parameter').change(function () {
+        SwapImage('spcImage', BuildURL(baseURL, targetDate), targetDate.getHours());
+    });
+
+    $('input#retrieve').click(function () {
+        var year = $('select#year').val();
+        var month = $('select#month').val();
+        var day = $('select#day').val();
+        var hour = $('select#hour').val().replace('z', '');
+        targetDate = new Date(year, month, day, hour);
+        SwapImage('spcImage', BuildURL(baseURL, targetDate), targetDate.getHours());
+    });
+
+    SwapImage('spcImage', BuildURL(baseURL, targetDate), targetDate.getHours());
+</script>

@@ -1,0 +1,7 @@
+﻿html, body, ul, ol, li {
+    margin: 0;
+}
+
+li {
+    list-style: none;
+}

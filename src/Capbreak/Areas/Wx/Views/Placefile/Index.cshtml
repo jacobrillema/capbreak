@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewBag.Title = "Capbreak Placefiles";
+    var site = "http://capbreak.com";
+    var okmesoPlacefile = new List<string[]>
+        {
+            new [] { "Pressure", String.Format("{0}/Content/Wx/Placefile/OKMESO-MSLP.txt", site) },
+            new [] { "Moisture Convergence", String.Format("{0}/Content/Wx/Placefile/OKMESO-MstCnv.txt", site) },
+            new [] { "QDiv", String.Format("{0}/Content/Wx/Placefile/OKMESO-QDiv.txt", site) },
+            new [] { "Temperature", String.Format("{0}/Content/Wx/Placefile/OKMESO-T.txt", site) },
+            new [] { "Dewpoint", String.Format("{0}/Content/Wx/Placefile/OKMESO-Td.txt", site) },
+            new [] { "Theta E", String.Format("{0}/Content/Wx/Placefile/OKMESO-ThetaE.txt", site) },
+            new [] { "Dewpoint Depression", String.Format("{0}/Content/Wx/Placefile/OKMESO-DD.txt", site) }
+        };
+    var spcPlacefile = new List<string[]>
+        {
+            new [] { "Temp/Wind/Dewpoint", String.Format("{0}/Wx/Placefile/SpcMesoanalysis?sector=s13&parameter=ttd", site) },
+            new [] { "MLCAPE", String.Format("{0}/Wx/Placefile/SpcMesoanalysis?sector=s13&parameter=mlcp", site) },
+            new [] { "Effective Sig Tor", String.Format("{0}/Wx/Placefile/SpcMesoanalysis?sector=s13&parameter=stpc", site) }
+        };
+}
+
+<link href="@Url.Content("~/Content/Wx/Placefile/css/capbreak.Placefile.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Content/Shared/capbreak.pop.js")"></script>
+<div>
+    <h2>Placefiles</h2>
+    <div>
+        <h3>Oklahoma Mesonet</h3>
+        <div style="float:left; margin: 10px 0 10px 0;">
+            <div style="margin-bottom:10px;">
+                <span>Data provided by:</span>
+                <a href="http://www.mesonet.org/" target="_blank">
+                    <img src="@Url.Content("~/Content/Wx/Placefile/images/ok_mesonet_logo_large.png")" style="max-height:26px;" />
+                </a>
+            </div>
+            <ul style="margin-top: 10px;">
+                @foreach (var placefile in okmesoPlacefile)
+                {
+                    <li>
+                        <div style="float:left; width:170px;">@(placefile[0] + ":")</div>
+                        <div style="float: left;">@placefile[1]</div>
+                        <div style="clear:both;" />
+                    </li>
+                }
+            </ul>
+        </div>
+        <div style="float:right; margin-right: 100px;">
+            <img src="@Url.Content("~/Content/Wx/Placefile/images/ok_mesonet_sample.png")" class="pop" style="max-width:250px;" />
+        </div>
+        <div style="clear:both;" />
+    </div>
+    <div>
+        <h3>SPC Mesoanalysis</h3>
+        <div style="float:left; margin: 10px 0 10px 0;">
+            <div style="margin-bottom:10px;">
+                <span>Data provided by:</span>
+                <a href="http://www.spc.noaa.gov/" target="_blank">
+                    <img src="@Url.Content("~/Content/Wx/Placefile/images/spc_logo.gif")" style="max-height:26px;" />
+                </a>
+            </div>
+            <span>URL format: <em>@String.Format("{0}/Wx/Placefile/SpcMesoanalysis?sector=<sector>&parameter=<parameter>", site)</em></span><br />
+            <span><strong>Sector</strong> is the SPC sector code: <em>s13</em>, <em>s14</em>, etc.</span><br />
+            <span><strong>Parameter</strong> is the SPC parameter code: <em>ttd</em>, <em>mlcp</em>, <em>stpc</em>, etc.</span><br />
+            <span>Examples:</span><br />
+            <ul style="margin-top: 10px;">
+                @foreach (var placefile in spcPlacefile)
+                {
+                    <li>
+                        <div style="float:left; width:170px;">@(placefile[0] + ":")</div>
+                        <div style="float: left;">@placefile[1]</div>
+                        <div style="clear:both;" />
+                    </li>
+                }
+            </ul>
+        </div>
+        <div style="float:right; margin-right: 100px;">
+            <img src="@Url.Content("~/Content/Wx/Placefile/images/spc_sample.png")" class="pop" style="max-width:250px;" />
+        </div>
+        <div style="clear:both;" />
+    </div>
+</div>
