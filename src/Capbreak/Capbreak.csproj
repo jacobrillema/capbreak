@@ -39,16 +39,64 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.3.1\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc">
+      <HintPath>..\packages\Autofac.Mvc5.3.2.1\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.1.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Cors">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.1.2\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.1.2\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.1.2\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.1.2\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.1.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -62,40 +110,10 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http">
-    </Reference>
     <Reference Include="System.Net.Http.WebRequest">
-    </Reference>
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.0.0\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.1\lib\net40\System.Web.Optimization.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <Private>True</Private>
-      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
@@ -109,12 +127,6 @@
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Formatting">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.0.0\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.WebHost">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.0.0\lib\net45\System.Web.Http.WebHost.dll</HintPath>
@@ -173,11 +185,13 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Blog\BlogAreaRegistration.cs" />
     <Compile Include="Areas\Dev\DevAreaRegistration.cs" />
+    <Compile Include="Areas\Wx\Controllers\NexradController.cs" />
     <Compile Include="Areas\Wx\Controllers\PlacefileController.cs" />
     <Compile Include="Areas\Wx\Controllers\ToolsController.cs" />
     <Compile Include="Areas\Wx\Models\CachedImage.cs" />
     <Compile Include="Areas\Wx\Models\CoordinateModel.cs" />
     <Compile Include="Areas\Wx\Models\MesoanalysisModel.cs" />
+    <Compile Include="Areas\Wx\Models\MnCastModel.cs" />
     <Compile Include="Areas\Wx\WxAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -192,7 +206,10 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Shared\capbreak.pop.js" />
+    <Content Include="Content\Shared\js\capbreak.pop.js" />
+    <Content Include="Content\Shared\js\jquery-2.1.0.min.js" />
+    <Content Include="Content\Shared\js\moment.min.js" />
+    <Content Include="Content\Shared\js\utils.js" />
     <Content Include="Content\Wx\Placefile\css\capbreak.placefile.css" />
     <Content Include="Content\Wx\Placefile\images\spc_logo.gif" />
     <Content Include="Content\Wx\Placefile\images\spc_sample.png" />
@@ -206,6 +223,9 @@
     <Content Include="Content\Wx\Placefile\OKMESO-Wind.txt" />
     <Content Include="Content\Wx\Placefile\images\ok_mesonet_logo_large.png" />
     <Content Include="Content\Wx\Placefile\images\ok_mesonet_sample.png" />
+    <Content Include="Content\Wx\Tools\Radar\performance notes.txt" />
+    <Content Include="Content\Wx\Tools\Radar\js\radar.js" />
+    <Content Include="Content\Wx\Tools\Radar\js\radar.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -219,6 +239,37 @@
     <Content Include="Areas\Wx\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Wx\Views\Placefile\Index.cshtml" />
     <Content Include="Areas\Wx\Views\Tools\SpcArchive.cshtml" />
+    <Content Include="Areas\Wx\Views\Tools\Radar.cshtml" />
+    <Content Include="Content\Wx\Tools\Radar\bv.json" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102003" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102007" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102011" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102015" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102020" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102024" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102028" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102032" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102041" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102045" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102049" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102054" />
+    <Content Include="Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102058" />
+    <Content Include="Content\Wx\Tools\Radar\nx0.json" />
+    <Content Include="Content\Wx\Tools\Radar\nx1.json" />
+    <Content Include="Content\Wx\Tools\Radar\nx10.json" />
+    <Content Include="Content\Wx\Tools\Radar\nx11.json" />
+    <Content Include="Content\Wx\Tools\Radar\nx12.json" />
+    <Content Include="Content\Wx\Tools\Radar\nx2.json" />
+    <Content Include="Content\Wx\Tools\Radar\nx3.json" />
+    <Content Include="Content\Wx\Tools\Radar\nx4.json" />
+    <Content Include="Content\Wx\Tools\Radar\nx5.json" />
+    <Content Include="Content\Wx\Tools\Radar\nx6.json" />
+    <Content Include="Content\Wx\Tools\Radar\nx7.json" />
+    <Content Include="Content\Wx\Tools\Radar\nx8.json" />
+    <Content Include="Content\Wx\Tools\Radar\nx9.json" />
+    <Content Include="Content\Wx\Tools\Radar\radar.json" />
+    <Content Include="Content\Wx\Tools\Radar\radar.json.gz" />
+    <Content Include="Areas\Wx\Views\Tools\MnCast.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -273,6 +324,16 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Capbreak.Core\Capbreak.Core.csproj">
+      <Project>{f729e214-6cc0-46e9-b429-05dcfdc6736a}</Project>
+      <Name>Capbreak.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Capbreak.Protocol\Capbreak.Protocol.csproj">
+      <Project>{79f81320-f985-4e54-b545-ea900408cabe}</Project>
+      <Name>Capbreak.Protocol</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

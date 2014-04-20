@@ -98,7 +98,6 @@ C:\Git\Capbreak\src\Capbreak\bin\System.Web.Razor.xml
 C:\Git\Capbreak\src\Capbreak\bin\System.Web.WebPages.xml
 C:\Git\Capbreak\src\Capbreak\bin\System.Web.WebPages.Deployment.xml
 C:\Git\Capbreak\src\Capbreak\bin\System.Web.WebPages.Razor.xml
-C:\Git\Capbreak\src\Capbreak\bin\Newtonsoft.Json.xml
 C:\Git\Capbreak\src\Capbreak\bin\Antlr3.Runtime.pdb
 C:\Git\Capbreak\src\Capbreak\bin\System.Net.Http.Formatting.xml
 C:\Git\Capbreak\src\Capbreak\bin\System.Web.Http.xml
@@ -120,3 +119,17 @@ C:\Git\Capbreak\src\Capbreak\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\Git\Capbreak\src\Capbreak\obj\Debug\Capbreak.csprojResolveAssemblyReference.cache
 C:\Git\Capbreak\src\Capbreak\obj\Debug\Capbreak.dll
 C:\Git\Capbreak\src\Capbreak\obj\Debug\Capbreak.pdb
+C:\Git\Capbreak\src\Capbreak\bin\HtmlAgilityPack.dll
+C:\Git\Capbreak\src\Capbreak\bin\HtmlAgilityPack.pdb
+C:\Git\Capbreak\src\Capbreak\bin\HtmlAgilityPack.xml
+C:\Git\Capbreak\src\Capbreak\bin\System.Web.Cors.dll
+C:\Git\Capbreak\src\Capbreak\bin\System.Web.Http.Cors.dll
+C:\Git\Capbreak\src\Capbreak\bin\System.Web.Http.Cors.xml
+C:\Git\Capbreak\src\Capbreak\bin\Autofac.dll
+C:\Git\Capbreak\src\Capbreak\bin\Autofac.Integration.Mvc.dll
+C:\Git\Capbreak\src\Capbreak\bin\Capbreak.Core.dll
+C:\Git\Capbreak\src\Capbreak\bin\Capbreak.Protocol.dll
+C:\Git\Capbreak\src\Capbreak\bin\Capbreak.Core.pdb
+C:\Git\Capbreak\src\Capbreak\bin\Capbreak.Protocol.pdb
+C:\Git\Capbreak\src\Capbreak\bin\Autofac.xml
+C:\Git\Capbreak\src\Capbreak\bin\Autofac.Integration.Mvc.xml

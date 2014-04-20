@@ -1,0 +1,61 @@
+Original poly building time
+Object {polyCount: 31425, renderTimer: 37} radar.htm:64
+Object {polyCount: 32173, renderTimer: 22} radar.htm:64
+Object {polyCount: 31158, renderTimer: 20} radar.htm:64
+Object {polyCount: 30015, renderTimer: 16} radar.htm:64
+Object {polyCount: 31143, renderTimer: 17} radar.htm:64
+Object {polyCount: 30075, renderTimer: 16} radar.htm:64
+Object {polyCount: 30950, renderTimer: 13} radar.htm:64
+Object {polyCount: 31428, renderTimer: 14} radar.htm:64
+Object {polyCount: 30672, renderTimer: 14} radar.htm:64
+Object {polyCount: 30606, renderTimer: 13} radar.htm:64
+Object {polyCount: 31784, renderTimer: 14} radar.htm:64
+Object {polyCount: 31824, renderTimer: 15} radar.htm:64
+Object {polyCount: 32920, renderTimer: 17} 
+
+Original polybuilding + render
+Object {polyCount: 31425, renderTimer: 142} radar.htm:64
+Object {polyCount: 32173, renderTimer: 126} radar.htm:64
+Object {polyCount: 31158, renderTimer: 134} radar.htm:64
+Object {polyCount: 30015, renderTimer: 113} radar.htm:64
+Object {polyCount: 31143, renderTimer: 136} radar.htm:64
+Object {polyCount: 30075, renderTimer: 110} radar.htm:64
+Object {polyCount: 30950, renderTimer: 138} radar.htm:64
+Object {polyCount: 31428, renderTimer: 117} radar.htm:64
+Object {polyCount: 30672, renderTimer: 124} radar.htm:64
+Object {polyCount: 30606, renderTimer: 111} radar.htm:64
+Object {polyCount: 31784, renderTimer: 117} radar.htm:64
+Object {polyCount: 31824, renderTimer: 123} radar.htm:64
+Object {polyCount: 32920, renderTimer: 138} 
+
+Combining polygons and some minor tweaks
+Object {polyCount: 13966, renderTimer: 34} radar.htm:64
+Object {polyCount: 14479, renderTimer: 18} radar.htm:64
+Object {polyCount: 14175, renderTimer: 10} radar.htm:64
+Object {polyCount: 13854, renderTimer: 11} radar.htm:64
+Object {polyCount: 14039, renderTimer: 10} radar.htm:64
+Object {polyCount: 13615, renderTimer: 10} radar.htm:64
+Object {polyCount: 13909, renderTimer: 7} radar.htm:64
+Object {polyCount: 13889, renderTimer: 9} radar.htm:64
+Object {polyCount: 13652, renderTimer: 6} radar.htm:64
+Object {polyCount: 13687, renderTimer: 8} radar.htm:64
+Object {polyCount: 13962, renderTimer: 7} radar.htm:64
+Object {polyCount: 13959, renderTimer: 6} radar.htm:64
+Object {polyCount: 14108, renderTimer: 8} 
+
+
+Combining polygons and some minor tweaks polybuilding + render
+Object {polyCount: 13966, renderTimer: 80} radar.htm:64
+Object {polyCount: 14479, renderTimer: 71} radar.htm:64
+Object {polyCount: 14175, renderTimer: 71} radar.htm:64
+Object {polyCount: 13854, renderTimer: 67} radar.htm:64
+Object {polyCount: 14039, renderTimer: 71} radar.htm:64
+Object {polyCount: 13615, renderTimer: 69} radar.htm:64
+Object {polyCount: 13909, renderTimer: 70} radar.htm:64
+Object {polyCount: 13889, renderTimer: 62} radar.htm:64
+Object {polyCount: 13652, renderTimer: 74} radar.htm:64
+Object {polyCount: 13687, renderTimer: 81} radar.htm:64
+Object {polyCount: 13962, renderTimer: 78} radar.htm:64
+Object {polyCount: 13959, renderTimer: 71} radar.htm:64
+Object {polyCount: 14108, renderTimer: 77} 
+

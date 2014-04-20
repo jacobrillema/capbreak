@@ -1,0 +1,122 @@
+﻿@model Capbreak.Areas.Wx.Models.MnCastModel
+@{
+    ViewBag.Title = "Minneapolis Forecast";
+    const string iemprefix = "http://www.meteor.iastate.edu/~ckarsten/bufkit/images/plotter.php?site=kmsp";
+}
+
+<style>
+    #srww {
+    }
+    #srww img {
+        max-width: 270px;
+        max-height: 190px;
+        margin: 3px;
+    }
+    #iem {
+    }
+    #iem img {
+    }
+    #codhrrrloop {
+        position: relative;
+        width: 800px;
+        height: 600px;
+    }
+    #codhrrrloop img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+    }
+    #codhrrrloop > div {
+        width: 300px;
+        height: 100px;
+        background: grey;
+        cursor: pointer;
+        font-size: 1.7em;
+        line-height: 100px;
+        border-radius: 5px;
+        text-align: center;
+    }
+    #afd {
+        width: 600px;
+    }
+    h3 {
+        margin-top: 30px;
+    }
+</style>
+
+<h2>Minneapolis Forecast</h2>
+
+<div id="srww">
+    <h3>Storm Prediction Center</h3>
+    <a href="http://www.spc.noaa.gov/products/outlook/day1otlk.html">
+        <img src="http://www.spc.noaa.gov/products/outlook/day1otlk.gif" />
+    </a>
+    <a href="http://www.spc.noaa.gov/exper/mesoanalysis/new/archiveviewer.php?sector=13&parm=rgnlrad">
+        <img src="http://www.spc.noaa.gov/products/activity_loop.gif" />
+    </a>
+    <a href="http://www.spc.noaa.gov/products/watch/">
+        <img src="http://www.spc.noaa.gov/products/watch/validww.png" />
+    </a>
+    <a href="http://www.spc.noaa.gov/products/md/">
+        <img src="http://www.spc.noaa.gov/products/md/validmd.png">
+    </a>
+</div>
+<div id="iem">
+    <h3>Temperature/Rain Meteograms</h3>
+    <span>(dark green line is what the NWS is predicting)</span>
+    <img src="@(iemprefix + "&var=tf&nam=1&namm=1&nam4km=1&gfs=1&gfsm=1&rap=1&nam_mos=1&gfs_mos=1&gfsm_mos=1&nws=1&obs=1&con=1")" />
+    <img src="@(iemprefix + "&var=qpf_accum&nam=1&namm=1&nam4km=1&gfs=1&gfsm=1&rap=1&nam_mos=1&gfs_mos=1&gfsm_mos=1&nws=1&obs=1&con=1")" />
+    @*<img src="@(iemprefix + "&var=snow_accum&nam=1&namm=1&nam4km=1&gfs=1&gfsm=1&rap=1&nam_mos=1&gfs_mos=1&gfsm_mos=1&nws=1&obs=1&con=1&max_t=1&cobb=1&compaction=1&ratio=11")" />*@
+</div>
+<h3>Today's Forecast Precipitation</h3>
+<div id="codhrrrloop">
+    <div>Click to generate loop...</div>
+    @foreach(var codimg in Model.CodUrls)
+    {
+        <img data-url="@codimg" />
+    }
+</div>
+
+<h3>Further Reading</h3>
+<div>
+    <a href="http://blogs.mprnews.org/updraft/" target="_blank">Paul Huttner</a><br />
+    <a href="http://www.startribune.com/weather/blogs/Paul_Douglas_on_Weather.html" target="_blank">Paul Douglas</a>
+</div>
+
+<h3>Latest MPX Area Forecast Discussion</h3>
+<div id="afd">
+    <pre>@(new HtmlString(Model.Afd))</pre>
+</div>
+
+<script>
+    var currentLoop = 0;
+    var els = $('#codhrrrloop img');
+    var codhrrrlooping = false;
+
+    $('#codhrrrloop > div').click(function () {
+        if (!codhrrrlooping) {
+            els.error(function () {
+                $(this).remove();
+            });
+
+            $('#codhrrrloop span').remove();
+
+            els.each(function () {
+                $(this).attr('src', $(this).data('url'));
+            });
+
+            codhrrrlooping = true;
+        }
+    });
+
+    $(document).ready(function () {
+        setInterval(function () {
+            els = $('#codhrrrloop img');
+            els.hide();
+            $(els[currentLoop]).show();
+            currentLoop++;
+            if (currentLoop >= els.length) { currentLoop = 0; }
+        }, 1000);
+    });
+</script>
