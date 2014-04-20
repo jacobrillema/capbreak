@@ -21,15 +21,14 @@ namespace Capbreak.Protocol.NexradParser
         {
             // http://level3.allisonhouse.com/level3/f410ba3360389cc8401869160fc0a4cb/MPX/N0U/dir.list
             var filelist = new List<string>();
-            var nexradbase = "http://level3.allisonhouse.com/level3/f410ba3360389cc8401869160fc0a4cb";
-            var endpoint = String.Format("{0}/{1}/{2}/dir.list", nexradbase, site, product);
+            //var endpoint = String.Format(nexradbase, site, product);
 
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetStringAsync(endpoint);
-                if (!String.IsNullOrEmpty(response))
-                    filelist = response.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            }
+            //using (var client = new HttpClient())
+            //{
+            //    var response = await client.GetStringAsync(endpoint);
+            //    if (!String.IsNullOrEmpty(response))
+            //        filelist = response.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            //}
 
             return filelist;
         }
@@ -37,29 +36,37 @@ namespace Capbreak.Protocol.NexradParser
         public async Task<NexradScan> FetchNexradScanAsync(string site, string product, string filename)
         {
             // http://level3.allisonhouse.com/level3/f410ba3360389cc8401869160fc0a4cb/MPX/N0U/N0U_20140416_1641
+            // // http://weather.noaa.gov/pub/SL.us008001/DF.of/DC.radar/DS.p19r0/SI.kmpx/
             var scan = new NexradScan();
             var filelist = new List<string>();
-            var nexradbase = "http://level3.allisonhouse.com/level3/f410ba3360389cc8401869160fc0a4cb";
-            var endpoint = String.Format("{0}/{1}/{2}/{3}", nexradbase, site, product, filename);
+            var nexradbase = "http://weather.noaa.gov/pub/SL.us008001/DF.of/DC.radar/DS.{0}/SI.{1}/{2}";
+
+            switch (product.ToLowerInvariant())
+            {
+                case "n0r":
+                    product = "p19r0";
+                    break;
+            }
+
+            var endpoint = String.Format(nexradbase, product, site, filename);
+            Stream response;
 
             using (var client = new HttpClient())
             {
-                var response = await client.GetStringAsync(endpoint);
-                var fs = new FileStream(@"C:\Git\Capbreak\src\Capbreak\Content\Wx\Tools\Radar\KOUN_SDUS54_N0RVNX_201005102003", FileMode.Open, FileAccess.Read);
+                response = await client.GetStreamAsync(endpoint);
+            }
 
-                if (response != null)
-                {
-                    var ms = new MemoryStream();
-                    //response.CopyTo(ms);
-                    fs.CopyTo(ms);
-                    scan = ParseNexrad(fs);
-                }
+            if (response != null)
+            {
+                var ms = new MemoryStream();
+                response.CopyTo(ms);
+                scan = ParseNexrad(ms);
             }
 
             return scan;
         }
 
-        public static NexradScan ParseNexrad(FileStream stream)
+        public static NexradScan ParseNexrad(MemoryStream stream)
         {
             var nexrad = new NexradScan();
 
@@ -73,6 +80,7 @@ namespace Capbreak.Protocol.NexradParser
                 var symbology = new Symbology();
 
                 // Header
+                stream.Position = 0;
                 stream.Read(headerData, 0, 30);
                 var headerString = System.Text.Encoding.UTF8.GetString(headerData);
                 headerString = headerString.Replace("\n", string.Empty).Replace("\r", " ").Replace("  ", " ");

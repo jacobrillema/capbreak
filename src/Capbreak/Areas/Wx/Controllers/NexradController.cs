@@ -33,12 +33,17 @@ namespace Capbreak.Areas.Wx.Controllers
             return scan;
         }
 
+        // TODO handle newer forms of reflectivity
+        // TODO handle public vs AH
         public async Task<string> Latest(string site, string product)
         {
-            site = site.ToUpperInvariant();
-            product = product.ToUpperInvariant();
-            var filelist = await List(site, product);
-            var latestfile = filelist.Last();
+            var latestfile = string.Empty;
+            //var filelist = await List(site, product);
+            //var latestfile = filelist.Last();
+
+            if (String.IsNullOrEmpty(latestfile))
+                latestfile = "sn.last";
+
             var latestscan = await Scan(latestfile, site, product);
             var latestscanjson = JsonConvert.SerializeObject(latestscan);
 
