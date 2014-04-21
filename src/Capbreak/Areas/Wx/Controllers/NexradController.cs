@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Capbreak.Protocol.NexradParser;
+using Capbreak.Protocol.NexradSiteList;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using Capbreak.Protocol.Models;
@@ -48,6 +49,15 @@ namespace Capbreak.Areas.Wx.Controllers
             var latestscanjson = JsonConvert.SerializeObject(latestscan);
 
             return latestscanjson;
+        }
+
+        public async Task<string> SiteList()
+        {
+            var nexradSiteListService = new NexradSiteListService();
+            var sitelist = await nexradSiteListService.GetSites();
+            var response = JsonConvert.SerializeObject(sitelist);
+
+            return response;
         }
     }
 }

@@ -164,8 +164,8 @@ namespace Capbreak.Protocol.NexradParser
                         var radial = new Radial();
                         radial.ColorValues = new List<Int32>();
                         radial.RleCount = ReadHalfWord(stream);
-                        radial.StartAngle = ReadHalfWord(stream) / 10;
-                        radial.AngleDelta = ReadHalfWord(stream) / 10;
+                        radial.StartAngle = ReadHalfWord(stream) / 10D;
+                        radial.AngleDelta = ReadHalfWord(stream) / 10D;
 
                         for (var j = 0; j < radial.RleCount * 2; j++)
                         {

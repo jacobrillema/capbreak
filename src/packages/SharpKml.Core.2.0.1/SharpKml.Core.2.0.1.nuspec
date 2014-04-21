@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>SharpKml.Core</id>
+    <version>2.0.1</version>
+    <authors>Samuel Cragg</authors>
+    <owners>Samuel Cragg</owners>
+    <licenseUrl>http://sharpkml.codeplex.com/license</licenseUrl>
+    <projectUrl>http://sharpkml.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SharpKML is an implementation of the Open Geospatial Consortium KML 2.2 standard developed in C#, able to read and write KML files.
+It targets the PCL (.NET 4.0, Silverlight 5, Windows Phone 8, Windows Store) released under the MS-PL license.</description>
+    <summary>Proides functionality to read and write KML data.</summary>
+    <tags>kml</tags>
+  </metadata>
+</package>
