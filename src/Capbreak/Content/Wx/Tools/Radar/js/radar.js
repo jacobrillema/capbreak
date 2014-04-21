@@ -18,37 +18,49 @@ var polygonReduce = true;	// Enabling this cuts render time by ~100%, and has no
 var transparency = true;	// Enabling this causes a 50% performance hit
 var groupRendering = true;	// Enabling this cuts render time by 25-33%, and has no adverse display impact
 var colorTable = [ '#000', '#00EAEC', '#01A0F6', '#0000F6', '#00FF00', '#00C800', '#009000', '#FFFF00', '#E7C000', '#FF9000', '#FF0000', '#D60000', '#C00000', '#FF00FF', '#9955C9', '#FFF' ];
-var nexradScans = [nx0, nx1, nx2, nx3, nx4, nx5, nx6, nx7, nx8, nx9, nx10, nx11, nx12];
+//var nexradScans = [nx0, nx1, nx2, nx3, nx4, nx5, nx6, nx7, nx8, nx9, nx10, nx11, nx12];
 var totalRenderTime = 0;
 var polygonGroups = [];
 
-for (var i = 0; i < 13; i++) {
-	$('body').append(
-		$('<canvas/>', { id: 'nx' + i, style: 'display: none;' }).attr('width', width).attr('height', height)
-	);
+//for (var i = 0; i < 13; i++) {
+//	$('body').append(
+//		$('<canvas/>', { id: 'nx' + i, style: 'display: none;' }).attr('width', width).attr('height', height)
+//	);
 	
-	// Hack to help remove smoothing from lines - sub pixel rendering is expensive - does this actually impact anything?
-	/*$('canvas').each(function() {
-		this.translate(0.5, 0.5);
-	});*/
+//	// Hack to help remove smoothing from lines - sub pixel rendering is expensive - does this actually impact anything?
+//	/*$('canvas').each(function() {
+//		this.translate(0.5, 0.5);
+//	});*/
 	
-	var tmpContext = $('#nx' + i).get(0).getContext('2d');
-	var renders = renderNexrad(tmpContext, nexradScans[i]);
-	console.log(renders);
-}
+//	var tmpContext = $('#nx' + i).get(0).getContext('2d');
+//	var renders = renderNexrad(tmpContext, nexradScans[i]);
+//	console.log(renders);
+//}
 
-var currentScan = 0;
-setInterval(function() {
-	var previous = (currentScan > 0) ? currentScan - 1 : 12;
-	hideElement(document.getElementById('nx' + previous));
-	showElement(document.getElementById('nx' + currentScan));
-	currentScan = (currentScan == 12) ? 0 : currentScan + 1;
-}, 75);
+$('#nxfetch').click(function () {
+    // http://capbreak.com/wx/nexrad/latest?site=kmpx&product=n0r
+    var site = $('#nxsite').val();
+    var product = $('#nxproduct').val();
+    var endpoint = 'http://capbreak.com/wx/nexrad/latest?site=' + site + '&product=' + product;
+    var context = $('canvas').get(0).getContext('2d');
+    $.getJSON(endpoint, function (data) {
+        renderNexrad(context, data);
+    });
+});
+
+//var currentScan = 0;
+//setInterval(function() {
+//	var previous = (currentScan > 0) ? currentScan - 1 : 12;
+//	hideElement(document.getElementById('nx' + previous));
+//	showElement(document.getElementById('nx' + currentScan));
+//	currentScan = (currentScan == 12) ? 0 : currentScan + 1;
+//}, 75);
 
 function renderNexrad(context, data) {
 	var now = Date.now();
 	renderComplete = false;
 	var polyCount = 0;
+	context.clearRect(0, 0, 480, 480);  // TODO change to actual size
 	
 	for (var i = 0; i < data.Symbology.RadialData.length; i++) {
 		var radial = data.Symbology.RadialData[i];
@@ -186,7 +198,7 @@ $('#canvas').mousemove(function(event) {
 	mouseEvent = event;
 });
 
-setInterval(function() {
+/*(function() {
 	if (mouseMove) {
 		mouseMove = false;
 		var pos = findPos(mouseElement);
@@ -229,7 +241,7 @@ setInterval(function() {
 		infoContext.clearRect(0, 0, width, height);
 		infoContext.fillText(dbz + ' dBz', 100, 100);
 	}
-}, 100);
+}, 100);*/
 
 function findPos(obj) {
 	var curleft = 0, curtop = 0;

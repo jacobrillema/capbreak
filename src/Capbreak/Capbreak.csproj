@@ -225,7 +225,6 @@
     <Content Include="Content\Wx\Placefile\images\ok_mesonet_sample.png" />
     <Content Include="Content\Wx\Tools\Radar\performance notes.txt" />
     <Content Include="Content\Wx\Tools\Radar\js\radar.js" />
-    <Content Include="Content\Wx\Tools\Radar\js\radar.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

@@ -5,18 +5,31 @@
 
 <h2>Radar</h2>
 
+<div>
+    <select id="nxsite">
+        <option value="kmpx">KMPX - Chanhassen, Minnesota</option>
+        <option value="kict">KICT - Wichita, Kansas</option>
+        <option value="kddc">KDDX - Dodge City, Kansas</option>
+        <option value="kvnx">KVNX - Vance Air Force Base, Oklahoma</option>
+    </select>
+    <select id="nxproduct">
+        <option value="N0R">N0R - Base Reflectivity, .5 Tilt</option>
+    </select>
+    <input type="button" id="nxfetch" value="Fetch" />
+</div>
+
+<canvas width="480" height="480"></canvas>
+
 <style>
     canvas {
-        position: absolute;
-        top: 200px;
-        left: 200px;
+        margin-top: 20px;
         border: 2px solid black;
     }
 </style>
 <script src="@Url.Content("~/Content/Shared/js/jquery-2.1.0.min.js")"></script>
 <script src="@Url.Content("~/Content/Shared/js/moment.min.js")"></script>
 <script src="@Url.Content("~/Content/Shared/js/utils.js")"></script>
-<script src="@Url.Content("~/Content/Wx/Tools/Radar/radar.json")"></script>
+@*<script src="@Url.Content("~/Content/Wx/Tools/Radar/radar.json")"></script>
 <script src="@Url.Content("~/Content/Wx/Tools/Radar/bv.json")"></script>
 <script src="@Url.Content("~/Content/Wx/Tools/Radar/nx0.json")"></script>
 <script src="@Url.Content("~/Content/Wx/Tools/Radar/nx1.json")"></script>
@@ -30,5 +43,6 @@
 <script src="@Url.Content("~/Content/Wx/Tools/Radar/nx9.json")"></script>
 <script src="@Url.Content("~/Content/Wx/Tools/Radar/nx10.json")"></script>
 <script src="@Url.Content("~/Content/Wx/Tools/Radar/nx11.json")"></script>
-<script src="@Url.Content("~/Content/Wx/Tools/Radar/nx12.json")"></script>
-<script src="@Url.Content("~/Content/Wx/Tools/Radar/js/radar.min.js")"></script>
+<script src="@Url.Content("~/Content/Wx/Tools/Radar/nx12.json")"></script>*@
+@*<script src="@Url.Content("~/Content/Wx/Tools/Radar/js/radar.min.js")"></script>*@
+<script src="@Url.Content("~/Content/Wx/Tools/Radar/js/radar.js")"></script>
