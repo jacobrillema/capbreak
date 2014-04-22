@@ -1,3 +1,11 @@
+/* General info
+##  Level 3 Implementation: http://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/2620001T.pdf
+##  Radial Data: Page 3-113; Figure 3-10
+##  NWS Data Management: http://www.nws.noaa.gov/datamgmt/filstnd.html#ds
+##  PHP NEXRAD DECODER: https://github.com/johncharrell/WSR-88D/blob/master/classes/NexradDecoder.php
+*/
+
+
 //var infoCanvas = document.getElementById('info');
 //var infoContext = infoCanvas.getContext('2d');
 // TODO optimization:
@@ -11,9 +19,9 @@ var mouseMove = false;
 var mouseEvent = null;
 var mouseElement = null;
 var badAngleDeltaCount = 0;
-var zoom = 1;
-var width = 480;
-var height = 480;
+var zoom = .51;
+var width = 500;
+var height = 500;
 var polygonReduce = true;	// Enabling this cuts render time by ~100%, and has no adverse display impact
 var transparency = true;	// Enabling this causes a 50% performance hit
 var groupRendering = true;	// Enabling this cuts render time by 25-33%, and has no adverse display impact
@@ -37,25 +45,95 @@ var polygonGroups = [];
 //	console.log(renders);
 //}
 
-$('#nxfetch').click(function () {
-    // http://capbreak.com/wx/nexrad/latest?site=kmpx&product=n0r
-    var site = $('#nxsite').val();
-    var product = $('#nxproduct').val();
-    var endpoint = 'http://capbreak.com/wx/nexrad/latest?site=' + site + '&product=' + product;
-    var context = $('canvas').get(0).getContext('2d');
-    $.getJSON(endpoint, function (data) {
-        renderNexrad(context, data);
-    });
-});
+/* Bin spacing details
+if (header.getProductCode() == NexradHeader.L3PC_TDWR_LONG_RANGE_BASE_REFLECTIVITY_8BIT) {
+            binSpacing = 300;
+        }
+        else if (header.getProductCode() == NexradHeader.L3PC_TDWR_BASE_REFLECTIVITY_8BIT ||
+                header.getProductCode() == NexradHeader.L3PC_TDWR_BASE_VELOCITY_8BIT) {
+            binSpacing = 150;
+        }
+        else if (header.getProductCode() == NexradHeader.L3PC_LONG_RANGE_BASE_VELOCITY_8BIT ||
+        		header.getProductCode() == NexradHeader.L3PC_DIGITAL_DIFFERENTIAL_REFLECTIVITY ||
+        		header.getProductCode() == NexradHeader.L3PC_DIGITAL_CORRELATION_COEFFICIENT ||
+        		header.getProductCode() == NexradHeader.L3PC_DIGITAL_SPECIFIC_DIFFERENTIAL_PHASE ||
+        		header.getProductCode() == NexradHeader.L3PC_DIGITAL_ONE_HOUR_ACCUMULATION ||
+        		header.getProductCode() == NexradHeader.L3PC_DIGITAL_HYDROMETEOR_CLASSIFICATION ||
+        		header.getProductCode() == NexradHeader.L3PC_DIGITAL_HYBRID_HYDROMETEOR_CLASSIFICATION) {
+            binSpacing = 250;
+        }
+        else if (header.getProductCode() == NexradHeader.L3PC_ENHANCED_ECHO_TOPS ||
+                header.getProductCode() == NexradHeader.L3PC_DIGITAL_VERT_INT_LIQUID) {
+            binSpacing = 1000;
+        }*/
 
 function displayRadar(site, product) {
     // http://capbreak.com/wx/nexrad/latest?site=kmpx&product=n0r
-    //var endpoint = 'http://capbreak.com/wx/nexrad/latest?site=' + site + '&product=' + product;
-    var endpoint = 'http://localhost:20685/wx/nexrad/latest?site=' + site + '&product=' + product;
+    var endpoint = '/wx/nexrad/latest?site=' + site + '&product=' + product;
     var context = $('canvas#radar').get(0).getContext('2d');
     $.getJSON(endpoint, function (data) {
         renderNexrad(context, data);
     });
+}
+
+function testingstuff() {
+    // Get center of canvas
+    var canvasradius = $('canvas#radar').width() / 2;
+    console.log('canvasradius: ' + canvasradius);
+    var bounds = map.getBounds();
+    var km = getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.j, bounds.Ba.j, bounds.ra.k);
+    console.log('km: ' + km);
+    var mi = convertKmToMi(km);
+    console.log('mi: ' + mi);
+    var gmapWidth = $('#map-canvas').width();
+    var milesPerPixel = mi / gmapWidth;
+    console.log('mpp: ' + milesPerPixel);
+
+    // Change canvas width and height to appropriate mpp - hardcoded to 250 miles at the moment
+    var rangeMi = 250;
+    var canvasDiameter = rangeMi / milesPerPixel;
+    $('canvas#radar').attr('width', canvasDiameter);
+    $('canvas#radar').attr('height', canvasDiameter);
+    width = canvasDiameter;
+    height = canvasDiameter;
+}
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    ;
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+
+    return d;
+}
+
+function convertKmToMi(km) {
+    return km * 0.62137;
+}
+
+function deg2rad(deg) {
+    return deg * (Math.PI / 180)
+}
+
+function drawCircle(lat, lon) {
+    var options = {
+        map: map,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        center: new google.maps.LatLng(lat, lon),
+        radius: 199559  // 124 mi to meters
+    };
+
+    var circle = new google.maps.Circle(options);
 }
 
 //var currentScan = 0;

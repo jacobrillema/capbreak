@@ -67,8 +67,10 @@
             icon: '@Url.Content("~/Content/Wx/Nexrad/dot.png")'
         });
 
+        // TODO is this really efficient?
         google.maps.event.addListener(marker, 'click', function () {
             displayRadar(label, 'n0r');
+            drawCircle(location.k, location.A);
         });
 
         markers.push(marker);
@@ -95,7 +97,7 @@
     google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 <div id="map-canvas"></div>
-<div style="margin:20px 0 0 20px; background:#000; width:480px; height:480px; float:left;">
-    <canvas id="radar" width="480" height="480"></canvas>
+<div style="margin:20px 0 0 20px; background:#000; width:500px; height:500px; float:left;">
+    <canvas id="radar" width="500" height="500"></canvas>
 </div>
 <div style="clear:both;"></div>

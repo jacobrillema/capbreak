@@ -132,3 +132,4 @@ C:\Git\Capbreak\src\Capbreak\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\Git\Capbreak\src\Capbreak\obj\Debug\Capbreak.csprojResolveAssemblyReference.cache
 C:\Git\Capbreak\src\Capbreak\obj\Debug\Capbreak.dll
 C:\Git\Capbreak\src\Capbreak\obj\Debug\Capbreak.pdb
+C:\Git\Capbreak\src\Capbreak\bin\Newtonsoft.Json.dll

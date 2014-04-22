@@ -1,4 +1,0 @@
-C:\Git\Capbreak\src\Capbreak.Core\bin\Debug\Capbreak.Core.dll
-C:\Git\Capbreak\src\Capbreak.Core\bin\Debug\Capbreak.Core.pdb
-C:\Git\Capbreak\src\Capbreak.Core\obj\Debug\Capbreak.Core.dll
-C:\Git\Capbreak\src\Capbreak.Core\obj\Debug\Capbreak.Core.pdb
