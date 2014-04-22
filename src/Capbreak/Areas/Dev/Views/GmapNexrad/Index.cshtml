@@ -1,0 +1,101 @@
+﻿<style>
+    #map-canvas {
+        width: 500px;
+        height: 500px;
+        margin: 20px 0 0 0;
+        padding: 0px;
+        float: left;
+    }
+
+    .map-marker-label {
+        position: absolute;
+        color: white;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        font-size: 14px;
+        font-weight: normal;
+    }
+</style>
+<script src="@Url.Content("~/Content/Shared/js/jquery-2.1.0.min.js")"></script>
+<script src="@Url.Content("~/Content/Shared/js/moment.min.js")"></script>
+<script src="@Url.Content("~/Content/Shared/js/utils.js")"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script src="@Url.Content("~/Content/Wx/Nexrad/sitelist.js")"></script>
+<script src="@Url.Content("~/Content/Wx/Tools/Radar/js/radar.js")"></script>
+<script>
+    // Extend Google Maps
+    var markerSize = { x: 22, y: 40 };
+
+    google.maps.Marker.prototype.setLabel = function (label) {
+        this.label = new MarkerLabel({
+            map: this.map,
+            marker: this,
+            text: label
+        });
+        this.label.bindTo('position', this, 'position');
+    };
+
+    var MarkerLabel = function (options) {
+        this.setValues(options);
+        this.span = document.createElement('span');
+        this.span.className = 'map-marker-label';
+    };
+
+    MarkerLabel.prototype = $.extend(new google.maps.OverlayView(), {
+        onAdd: function () {
+            this.getPanes().overlayImage.appendChild(this.span);
+            var self = this;
+            this.listeners = [google.maps.event.addListener(this, 'position_changed', function () { self.draw(); })];
+        },
+        draw: function () {
+            var text = String(this.get('text'));
+            var position = this.getProjection().fromLatLngToDivPixel(this.get('position'));
+            this.span.innerHTML = text;
+            this.span.style.left = (position.x - (markerSize.x / 2)) - (text.length * 3) + 10 + 'px';
+            this.span.style.top = (position.y - markerSize.y + 40) + 'px';
+        }
+    });
+</script>
+<script>
+    var map;
+    var markers = [];
+
+    function addMarker(location, label) {
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            label: label,
+            icon: '@Url.Content("~/Content/Wx/Nexrad/dot.png")'
+        });
+
+        google.maps.event.addListener(marker, 'click', function () {
+            displayRadar(label, 'n0r');
+        });
+
+        markers.push(marker);
+    }
+
+    // Sets the map on all markers in the array.
+    function setAllMap(map) {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+        }
+    }
+
+    function initialize() {
+        var myLatlng = new google.maps.LatLng(37, -98);
+        var mapOptions = { zoom: 5, center: myLatlng };
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        $.each(sitelist, function () {
+            var latlon = new google.maps.LatLng(this.Latitude, this.Longitude);
+            addMarker(latlon, this.Name);
+        });
+    }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+<div id="map-canvas"></div>
+<div style="margin:20px 0 0 20px; background:#000; width:480px; height:480px; float:left;">
+    <canvas id="radar" width="480" height="480"></canvas>
+</div>
+<div style="clear:both;"></div>

@@ -83,7 +83,6 @@ C:\Git\Capbreak\src\Capbreak\bin\Microsoft.Owin.Security.MicrosoftAccount.dll
 C:\Git\Capbreak\src\Capbreak\bin\Microsoft.Owin.Security.OAuth.dll
 C:\Git\Capbreak\src\Capbreak\bin\Microsoft.Owin.Security.Twitter.dll
 C:\Git\Capbreak\src\Capbreak\bin\Microsoft.Web.Infrastructure.dll
-C:\Git\Capbreak\src\Capbreak\bin\Newtonsoft.Json.dll
 C:\Git\Capbreak\src\Capbreak\bin\Owin.dll
 C:\Git\Capbreak\src\Capbreak\bin\System.Net.Http.Formatting.dll
 C:\Git\Capbreak\src\Capbreak\bin\System.Web.Cors.dll

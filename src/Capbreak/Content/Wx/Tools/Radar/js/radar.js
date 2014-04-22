@@ -48,6 +48,16 @@ $('#nxfetch').click(function () {
     });
 });
 
+function displayRadar(site, product) {
+    // http://capbreak.com/wx/nexrad/latest?site=kmpx&product=n0r
+    //var endpoint = 'http://capbreak.com/wx/nexrad/latest?site=' + site + '&product=' + product;
+    var endpoint = 'http://localhost:20685/wx/nexrad/latest?site=' + site + '&product=' + product;
+    var context = $('canvas#radar').get(0).getContext('2d');
+    $.getJSON(endpoint, function (data) {
+        renderNexrad(context, data);
+    });
+}
+
 //var currentScan = 0;
 //setInterval(function() {
 //	var previous = (currentScan > 0) ? currentScan - 1 : 12;

@@ -48,6 +48,7 @@ namespace Capbreak.Protocol.NexradParser
                     break;
             }
 
+            site = site.ToLowerInvariant();
             var endpoint = String.Format(nexradbase, product, site, filename);
             Stream response;
 

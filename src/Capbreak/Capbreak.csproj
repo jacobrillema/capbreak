@@ -184,6 +184,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Blog\BlogAreaRegistration.cs" />
+    <Compile Include="Areas\Dev\Controllers\GmapNexradController.cs" />
     <Compile Include="Areas\Dev\DevAreaRegistration.cs" />
     <Compile Include="Areas\Wx\Controllers\NexradController.cs" />
     <Compile Include="Areas\Wx\Controllers\PlacefileController.cs" />
@@ -210,6 +211,9 @@
     <Content Include="Content\Shared\js\jquery-2.1.0.min.js" />
     <Content Include="Content\Shared\js\moment.min.js" />
     <Content Include="Content\Shared\js\utils.js" />
+    <Content Include="Content\Wx\Nexrad\dot.png" />
+    <Content Include="Content\Wx\Nexrad\empty-dark-grey-ring-hi.png" />
+    <Content Include="Content\Wx\Nexrad\sitelist.js" />
     <Content Include="Content\Wx\Placefile\css\capbreak.placefile.css" />
     <Content Include="Content\Wx\Placefile\images\spc_logo.gif" />
     <Content Include="Content\Wx\Placefile\images\spc_sample.png" />
@@ -269,6 +273,9 @@
     <Content Include="Content\Wx\Tools\Radar\radar.json" />
     <Content Include="Content\Wx\Tools\Radar\radar.json.gz" />
     <Content Include="Areas\Wx\Views\Tools\MnCast.cshtml" />
+    <Content Include="Areas\Dev\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Dev\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Dev\Views\GmapNexrad\Index.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -312,9 +319,7 @@
     <Folder Include="Areas\Blog\Controllers\" />
     <Folder Include="Areas\Blog\Models\" />
     <Folder Include="Areas\Blog\Views\Shared\" />
-    <Folder Include="Areas\Dev\Controllers\" />
     <Folder Include="Areas\Dev\Models\" />
-    <Folder Include="Areas\Dev\Views\Shared\" />
     <Folder Include="Content\Wx\Placefile\js\" />
   </ItemGroup>
   <ItemGroup>
