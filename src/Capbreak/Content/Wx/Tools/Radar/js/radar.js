@@ -71,6 +71,10 @@ function displayRadar(site, product) {
     // http://capbreak.com/wx/nexrad/latest?site=kmpx&product=n0r
     var endpoint = '/wx/nexrad/latest?site=' + site + '&product=' + product;
     var context = $('canvas#radar').get(0).getContext('2d');
+    testingstuff();
+
+    zoom = 1;
+
     $.getJSON(endpoint, function (data) {
         renderNexrad(context, data);
     });
@@ -94,6 +98,8 @@ function testingstuff() {
     var canvasDiameter = rangeMi / milesPerPixel;
     $('canvas#radar').attr('width', canvasDiameter);
     $('canvas#radar').attr('height', canvasDiameter);
+    $('#radarbox').css('width', canvasDiameter);
+    $('#radarbox').css('height', canvasDiameter);
     width = canvasDiameter;
     height = canvasDiameter;
 }
@@ -148,7 +154,7 @@ function renderNexrad(context, data) {
 	var now = Date.now();
 	renderComplete = false;
 	var polyCount = 0;
-	context.clearRect(0, 0, 480, 480);  // TODO change to actual size
+	context.clearRect(0, 0, width, height);  // TODO change to actual size
 	
 	for (var i = 0; i < data.Symbology.RadialData.length; i++) {
 		var radial = data.Symbology.RadialData[i];
