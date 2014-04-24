@@ -57,11 +57,20 @@ namespace Capbreak.Protocol.NexradParser
                 response = await client.GetStreamAsync(endpoint);
             }
 
+            // TODO add usings for these streams
+            // For testing
+            //Stream fs = new FileStream(@"C:\Git\Capbreak\src\Capbreak\Content\Wx\Nexrad\l3test", FileMode.Open);
+
             if (response != null)
             {
                 var ms = new MemoryStream();
                 response.CopyTo(ms);
+                //fs.CopyTo(ms);
                 scan = ParseNexrad(ms);
+                ms.Close();
+                ms.Dispose();
+                //fs.Close();
+                //fs.Dispose();
             }
 
             return scan;
@@ -152,11 +161,11 @@ namespace Capbreak.Protocol.NexradParser
                     symbology.DataLength = ReadWord(stream);
                     symbology.PacketCode = ReadHalfWord(stream);
                     symbology.IndexFirstRangeBin = ReadHalfWord(stream);
-                    symbology.RangeBinCount = ReadHalfWord(stream);
-                    symbology.SweepCenterI = ReadHalfWord(stream);
-                    symbology.SweepCenterJ = ReadHalfWord(stream);
-                    symbology.ScaleFactor = ReadHalfWord(stream);
-                    symbology.RadialCount = ReadHalfWord(stream);
+                    symbology.RangeBinCount = ReadHalfWord(stream); // dataHeader[1]
+                    symbology.SweepCenterI = ReadHalfWord(stream);  // dataHeader[2]
+                    symbology.SweepCenterJ = ReadHalfWord(stream);  // dataHeader[3]
+                    symbology.ScaleFactor = ReadHalfWord(stream);   // dataHeader[4]
+                    symbology.RadialCount = ReadHalfWord(stream);   // dataHeader[5]
                     symbology.RadialData = new List<Radial>();
 
                     var radialCount = symbology.RadialCount;

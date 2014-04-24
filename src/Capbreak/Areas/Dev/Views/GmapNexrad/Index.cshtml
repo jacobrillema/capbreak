@@ -14,6 +14,10 @@
         font-size: 14px;
         font-weight: normal;
     }
+
+    .map-marker-html {
+        position: absolute;
+    }
 </style>
 <script src="@Url.Content("~/Content/Shared/js/jquery-2.1.0.min.js")"></script>
 <script src="@Url.Content("~/Content/Shared/js/moment.min.js")"></script>
@@ -21,6 +25,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <script src="@Url.Content("~/Content/Wx/Nexrad/sitelist.js")"></script>
 <script src="@Url.Content("~/Content/Wx/Tools/Radar/js/radar.js")"></script>
+<script src="@Url.Content("~/Content/Shared/js/CanvasLayer.js")"></script>
 <script>
     // Extend Google Maps
     var markerSize = { x: 22, y: 40 };
@@ -36,22 +41,42 @@
 
     var MarkerLabel = function (options) {
         this.setValues(options);
-        this.span = document.createElement('span');
-        this.span.className = 'map-marker-label';
+
+        if (options.text == 'html-anchor') {
+            $('#html-anchor').remove();
+            this.div = document.createElement('div');
+            this.div.id = 'html-anchor';
+            this.div.className = 'map-marker-html';
+        }
+        else {
+            this.span = document.createElement('span');
+            this.span.className = 'map-marker-label';
+        }
     };
 
     MarkerLabel.prototype = $.extend(new google.maps.OverlayView(), {
         onAdd: function () {
-            this.getPanes().overlayImage.appendChild(this.span);
+            if (this.get('text') == 'html-anchor') {
+                this.getPanes().overlayImage.appendChild(this.div);
+            }
+            else {
+                this.getPanes().overlayImage.appendChild(this.span);
+            }
             var self = this;
             this.listeners = [google.maps.event.addListener(this, 'position_changed', function () { self.draw(); })];
         },
         draw: function () {
             var text = String(this.get('text'));
             var position = this.getProjection().fromLatLngToDivPixel(this.get('position'));
-            this.span.innerHTML = text;
-            this.span.style.left = (position.x - (markerSize.x / 2)) - (text.length * 3) + 10 + 'px';
-            this.span.style.top = (position.y - markerSize.y + 40) + 'px';
+            if (this.get('text') == 'html-anchor') {
+                this.div.style.left = position.x + 'px';
+                this.div.style.top = position.y + 'px';
+            }
+            else {
+                this.span.innerHTML = text;
+                this.span.style.left = (position.x - (markerSize.x / 2)) - (text.length * 3) + 10 + 'px';
+                this.span.style.top = (position.y - markerSize.y + 40) + 'px';
+            }
         }
     });
 </script>
@@ -69,8 +94,9 @@
 
         // TODO is this really efficient?
         google.maps.event.addListener(marker, 'click', function () {
+            addMarker(location, 'html-anchor');
             displayRadar(label, 'n0r');
-            drawCircle(location.k, location.A);
+            //drawCircle(location.k, location.A);
         });
 
         markers.push(marker);
@@ -84,8 +110,8 @@
     }
 
     function initialize() {
-        var myLatlng = new google.maps.LatLng(32.675, -83.351);
-        var mapOptions = { zoom: 7, center: myLatlng };
+        var myLatlng = new google.maps.LatLng(40, -97);
+        var mapOptions = { zoom: 5, center: myLatlng };
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
         $.each(sitelist, function () {
@@ -97,7 +123,7 @@
     google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 <div id="map-canvas"></div>
-<div id="radarbox" style="margin:20px 0 0 20px; background:#000; width:500px; height:500px; float:left;">
-    <canvas id="radar" width="500" height="500"></canvas>
+<div id="radarbox" style="margin: 20px 0 0 20px; /*background: #000;*/ width: 460px; height: 460px; float: left; ">
+    <canvas id="radar" width="460" height="460"></canvas>
 </div>
 <div style="clear:both;"></div>

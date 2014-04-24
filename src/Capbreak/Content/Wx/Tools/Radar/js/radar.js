@@ -5,6 +5,12 @@
 ##  PHP NEXRAD DECODER: https://github.com/johncharrell/WSR-88D/blob/master/classes/NexradDecoder.php
 */
 
+/*
+    Actual Level-3 Base Reflectivity 124 nmi Range Product Code <br>
+    AWIPS HEADER CODE: N*R <br>
+    PRODUCT CODE: 19
+    public final static int L3PC_BASE_REFLECTIVITY_124NM = 19;
+*/
 
 //var infoCanvas = document.getElementById('info');
 //var infoContext = infoCanvas.getContext('2d');
@@ -19,16 +25,17 @@ var mouseMove = false;
 var mouseEvent = null;
 var mouseElement = null;
 var badAngleDeltaCount = 0;
-var zoom = .51;
-var width = 500;
-var height = 500;
-var polygonReduce = true;	// Enabling this cuts render time by ~100%, and has no adverse display impact
-var transparency = true;	// Enabling this causes a 50% performance hit
+var width = 460;
+var height = 460;
+var zoom = 1;
+var polygonReduce = false;	// Enabling this cuts render time by ~100%, and has no adverse display impact
+var transparency = false;	// Enabling this causes a 50% performance hit
 var groupRendering = true;	// Enabling this cuts render time by 25-33%, and has no adverse display impact
 var colorTable = [ '#000', '#00EAEC', '#01A0F6', '#0000F6', '#00FF00', '#00C800', '#009000', '#FFFF00', '#E7C000', '#FF9000', '#FF0000', '#D60000', '#C00000', '#FF00FF', '#9955C9', '#FFF' ];
 //var nexradScans = [nx0, nx1, nx2, nx3, nx4, nx5, nx6, nx7, nx8, nx9, nx10, nx11, nx12];
 var totalRenderTime = 0;
 var polygonGroups = [];
+var radarRadius = 0;
 
 //for (var i = 0; i < 13; i++) {
 //	$('body').append(
@@ -70,19 +77,24 @@ if (header.getProductCode() == NexradHeader.L3PC_TDWR_LONG_RANGE_BASE_REFLECTIVI
 function displayRadar(site, product) {
     // http://capbreak.com/wx/nexrad/latest?site=kmpx&product=n0r
     var endpoint = '/wx/nexrad/latest?site=' + site + '&product=' + product;
+    if (!$('canvas#radar').length) {
+        $('body').append($('<canvas/>', { id: 'radar' }));
+    }
     var context = $('canvas#radar').get(0).getContext('2d');
     testingstuff();
 
-    zoom = 1;
-
     $.getJSON(endpoint, function (data) {
         renderNexrad(context, data);
+        var anchor = $('#html-anchor');
+        anchor.append($('canvas#radar'));
+        anchor.css('left', anchor.css('left').replace('px', '') - (anchor.width() / 2));
+        anchor.css('top', anchor.css('top').replace('px', '') - (anchor.height() / 2));
     });
 }
-
 function testingstuff() {
     // Get center of canvas
     var canvasradius = $('canvas#radar').width() / 2;
+    radarRadius = canvasradius;
     console.log('canvasradius: ' + canvasradius);
     var bounds = map.getBounds();
     var km = getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.j, bounds.Ba.j, bounds.ra.k);
@@ -93,8 +105,8 @@ function testingstuff() {
     var milesPerPixel = mi / gmapWidth;
     console.log('mpp: ' + milesPerPixel);
 
-    // Change canvas width and height to appropriate mpp - hardcoded to 250 miles at the moment
-    var rangeMi = 250;
+    // Change canvas width and height to appropriate mpp - hardcoded to 230 miles at the moment, but why this value?
+    var rangeMi = 230;
     var canvasDiameter = rangeMi / milesPerPixel;
     $('canvas#radar').attr('width', canvasDiameter);
     $('canvas#radar').attr('height', canvasDiameter);
@@ -102,6 +114,9 @@ function testingstuff() {
     $('#radarbox').css('height', canvasDiameter);
     width = canvasDiameter;
     height = canvasDiameter;
+
+    // A zoom of 1 works perfectly with 460px diameter / 230px radius - zoom should equal ((rangeMi / milesPerPixel) / 460)
+    zoom = canvasDiameter / 460;
 }
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
@@ -171,7 +186,7 @@ function renderNexrad(context, data) {
 			if (colorValue > 0)
 			{
 				var polygon = [];
-				
+
 				polygon.push([
 					(Math.cos(radians(radialAngle - 90)) * radialPosition * zoom) + (width / 2.0),
 					(Math.sin(radians(radialAngle - 90)) * radialPosition * zoom) + (height / 2.0)
@@ -182,12 +197,13 @@ function renderNexrad(context, data) {
 					(Math.sin(radians((radialAngle - 90) + angleDelta)) * radialPosition * zoom) + (height / 2.0)
 				]);
 				
-				if (polygonReduce) {
-					while (j < radial.ColorValues.length && (colorValue == radial.ColorValues[j + 1])) {
-						radialPosition++;
-						j++;
-					}
-				}
+                // meow removed while testing
+				//if (polygonReduce) {
+				//	while (j < radial.ColorValues.length && (colorValue == radial.ColorValues[j + 1])) {
+				//		radialPosition++;
+				//		j++;
+				//	}
+				//}
 				
 				polygon.push([
 					(Math.cos(radians((radialAngle - 90) + angleDelta)) * (radialPosition + 1) * zoom) + (width / 2.0),
