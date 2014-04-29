@@ -28,7 +28,7 @@ var badAngleDeltaCount = 0;
 var width = 460;
 var height = 460;
 var zoom = 1;
-var polygonReduce = false;	// Enabling this cuts render time by ~100%, and has no adverse display impact
+var polygonReduce = true;	// Enabling this cuts render time by ~100%, and has no adverse display impact
 var transparency = false;	// Enabling this causes a 50% performance hit
 var groupRendering = true;	// Enabling this cuts render time by 25-33%, and has no adverse display impact
 var colorTable = [ '#000', '#00EAEC', '#01A0F6', '#0000F6', '#00FF00', '#00C800', '#009000', '#FFFF00', '#E7C000', '#FF9000', '#FF0000', '#D60000', '#C00000', '#FF00FF', '#9955C9', '#FFF' ];
@@ -36,6 +36,7 @@ var colorTable = [ '#000', '#00EAEC', '#01A0F6', '#0000F6', '#00FF00', '#00C800'
 var totalRenderTime = 0;
 var polygonGroups = [];
 var radarRadius = 0;
+var currentScan = null;
 
 //for (var i = 0; i < 13; i++) {
 //	$('body').append(
@@ -74,39 +75,98 @@ if (header.getProductCode() == NexradHeader.L3PC_TDWR_LONG_RANGE_BASE_REFLECTIVI
             binSpacing = 1000;
         }*/
 
-function displayRadar(site, product) {
+function displayRadar(site, product, latlon) {
     // http://capbreak.com/wx/nexrad/latest?site=kmpx&product=n0r
     var endpoint = '/wx/nexrad/latest?site=' + site + '&product=' + product;
+
     if (!$('canvas#radar').length) {
         $('body').append($('<canvas/>', { id: 'radar' }));
     }
-    var context = $('canvas#radar').get(0).getContext('2d');
-    testingstuff();
 
     $.getJSON(endpoint, function (data) {
-        renderNexrad(context, data);
-        var anchor = $('#html-anchor');
-        anchor.append($('canvas#radar'));
-        anchor.css('left', anchor.css('left').replace('px', '') - (anchor.width() / 2));
-        anchor.css('top', anchor.css('top').replace('px', '') - (anchor.height() / 2));
+        currentScan = data;
+        renderData(currentScan, latlon);
     });
 }
-function testingstuff() {
-    // Get center of canvas
-    var canvasradius = $('canvas#radar').width() / 2;
-    radarRadius = canvasradius;
-    console.log('canvasradius: ' + canvasradius);
+
+function renderData(scan, latlon) {
+    scan = scan || currentScan;
+    calculateBounds(latlon);
+    var radar = $('canvas#radar');
+    var context = radar.get(0).getContext('2d');
+    renderNexrad(context, currentScan);
+    var anchor = $('#html-anchor');
+    anchor.append(radar);
+    radar.css('left', radar.width() / -2);
+    radar.css('top', (radar.height() / -2) - 4);  // 5px adjustment for icon/origin
+}
+
+// Ba lat
+// ra lon
+// 
+function getBoundsInNmi() {
     var bounds = map.getBounds();
-    var km = getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.j, bounds.Ba.j, bounds.ra.k);
-    console.log('km: ' + km);
-    var mi = convertKmToMi(km);
-    console.log('mi: ' + mi);
-    var gmapWidth = $('#map-canvas').width();
-    var milesPerPixel = mi / gmapWidth;
-    console.log('mpp: ' + milesPerPixel);
+
+    // draw polygon around bounds
+    /*var triangleCoords = [
+    new google.maps.LatLng(bounds.Ba.j, bounds.ra.j),
+    new google.maps.LatLng(bounds.Ba.j, bounds.ra.k),
+    new google.maps.LatLng(bounds.Ba.k, bounds.ra.k),
+    new google.maps.LatLng(bounds.Ba.k, bounds.ra.j),
+    new google.maps.LatLng(bounds.Ba.j, bounds.ra.j)
+    ];
+
+    // Construct the polygon for testing
+    var polygon = new google.maps.Polygon({
+        paths: triangleCoords,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35
+    });
+
+    polygon.setMap(map);*/
+
+    // Go back to normal stuff for this function
+    var km = getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.j, bounds.Ba.k, bounds.ra.k);
+
+    return convertKmToNmi(km);
+}
+
+function calculateBounds(latlon) {
+    // Center the map
+    //debugger;
+    map.setCenter(latlon);
+
+    var mapcanvas = $('#map-canvas');
+    var bounds = map.getBounds();
+    var pxheight = mapcanvas.height();
+    var pxwidth = mapcanvas.width();
+    var pxdiagonal = Math.sqrt(Math.pow(pxwidth, 2) + Math.pow(pxheight, 2));
+    var nmidiagonal = convertKmToNmi(getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.j, bounds.Ba.k, bounds.ra.k));
+    var nmitop = convertKmToNmi(getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.j, bounds.Ba.j, bounds.ra.k));
+    var nmibottom = convertKmToNmi(getDistanceFromLatLonInKm(bounds.Ba.k, bounds.ra.j, bounds.Ba.k, bounds.ra.k));
+    var nmileft = convertKmToNmi(getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.j, bounds.Ba.k, bounds.ra.j));
+    var nmiright = convertKmToNmi(getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.k, bounds.Ba.k, bounds.ra.k));
+
+    var mppdiagonal = nmidiagonal / pxdiagonal;
+    var mpptop = nmitop / pxwidth;
+    var mppbottom = nmibottom / pxwidth;
+    var mppleft = nmileft / pxheight;
+    var mppright = nmiright / pxheight;
+
+    console.log('diagonal: ' + mppdiagonal);
+    console.log('top: ' + mpptop);
+    console.log('bottom: ' + mppbottom);
+    console.log('left: ' + mppleft);
+    console.log('right: ' + mppright);
+
+    // TODO set all this once up higher
+    var milesPerPixel = mppdiagonal;
 
     // Change canvas width and height to appropriate mpp - hardcoded to 230 miles at the moment, but why this value?
-    var rangeMi = 230;
+    var rangeMi = 248;
     var canvasDiameter = rangeMi / milesPerPixel;
     $('canvas#radar').attr('width', canvasDiameter);
     $('canvas#radar').attr('height', canvasDiameter);
@@ -138,6 +198,10 @@ function convertKmToMi(km) {
     return km * 0.62137;
 }
 
+function convertKmToNmi(km) {
+    return (km / 1.852);
+}
+
 function deg2rad(deg) {
     return deg * (Math.PI / 180)
 }
@@ -151,10 +215,13 @@ function drawCircle(lat, lon) {
         fillColor: '#FF0000',
         fillOpacity: 0.35,
         center: new google.maps.LatLng(lat, lon),
-        radius: 199559  // 124 mi to meters
+        radius: 229648  // 124 nmi to meters
     };
 
     var circle = new google.maps.Circle(options);
+
+    options.radius = 199559;    // 124 mi to meters
+    var circle2 = new google.maps.Circle(options);
 }
 
 //var currentScan = 0;

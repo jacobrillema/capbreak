@@ -18,6 +18,10 @@
     .map-marker-html {
         position: absolute;
     }
+
+    canvas#radar {
+        position: absolute;
+    }
 </style>
 <script src="@Url.Content("~/Content/Shared/js/jquery-2.1.0.min.js")"></script>
 <script src="@Url.Content("~/Content/Shared/js/moment.min.js")"></script>
@@ -84,20 +88,51 @@
     var map;
     var markers = [];
 
-    function addMarker(location, label) {
+    function displayPolygons(type) {
+        var endpoint = '/wx/nexrad/warningsfeed?type=' + type;
+        
+        $.getJSON(endpoint, function (data) {
+            if (data == null || data[0] == null || data[0].Polygons == null || data[0].Polygons.length < 1) { return; }
+
+            $.each(data[0].Polygons, function () {
+                var polycoords = [];
+                $.each(this, function () {
+                    polycoords.push(new google.maps.LatLng(this.X, this.Y));
+                });
+
+                var polygon = new google.maps.Polygon({
+                    paths: polycoords,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.0,
+                    zIndex: 10,
+                    optimized: false
+                });
+
+                polygon.setMap(map);
+            });
+        });
+    }
+
+    function addMarker(latlon, label, zindex) {
         var marker = new google.maps.Marker({
-            position: location,
+            position: latlon,
             map: map,
             label: label,
-            icon: '@Url.Content("~/Content/Wx/Nexrad/dot.png")'
+            icon: '@Url.Content("~/Content/Wx/Nexrad/dot.png")',
+            optimized: false,
+            zIndex: zindex
         });
 
-        // TODO is this really efficient?
-        google.maps.event.addListener(marker, 'click', function () {
-            addMarker(location, 'html-anchor');
-            displayRadar(label, 'n0r');
-            //drawCircle(location.k, location.A);
-        });
+        if (label != 'html-anchor') {
+            google.maps.event.addListener(marker, 'click', function () {
+                addMarker(latlon, 'html-anchor', 1);
+                displayRadar(label, 'n0r', latlon);
+                //drawCircle(latlon.k, latlon.A);
+            });
+        }
 
         markers.push(marker);
     }
@@ -111,12 +146,35 @@
 
     function initialize() {
         var myLatlng = new google.maps.LatLng(40, -97);
-        var mapOptions = { zoom: 5, center: myLatlng };
+        var mapOptions = { zoom: 4, center: myLatlng };
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        google.maps.event.addListener(map, 'zoom_changed', function () {
+            var zoomLevel = map.getZoom();
+            console.log(zoomLevel);
+
+            // TODO play with these values
+            // BUG zooming out doesn't work right
+            // Chrome likes to crash with 6000x6000 canvases for some reason...
+            if (zoomLevel <= 9) {
+                renderData();
+            }
+            else {
+                // Use CSS to zoom
+                console.log('using CSS to zoom');
+                var radar = $('canvas#radar');
+                var width = radar.width();
+                var height = radar.height();
+                radar.width(width * 2);
+                radar.height(height * 2);
+                radar.css('left', radar.width() / -2);
+                radar.css('top', radar.height() / -2);
+            }
+        });
 
         $.each(sitelist, function () {
             var latlon = new google.maps.LatLng(this.Latitude, this.Longitude);
-            addMarker(latlon, this.Name);
+            addMarker(latlon, this.Name, 2);
         });
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Text;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,6 +18,9 @@ namespace Capbreak.Protocol.NexradParser
 
     public class NexradParserService
     {
+        private readonly MemoryCache cache = MemoryCache.Default;
+        private readonly CacheItemPolicy policy = new CacheItemPolicy();
+
         public async Task<List<string>> FetchNexradFileListAsync(string site, string product)
         {
             // http://level3.allisonhouse.com/level3/f410ba3360389cc8401869160fc0a4cb/MPX/N0U/dir.list
@@ -37,11 +41,23 @@ namespace Capbreak.Protocol.NexradParser
         {
             // http://level3.allisonhouse.com/level3/f410ba3360389cc8401869160fc0a4cb/MPX/N0U/N0U_20140416_1641
             // // http://weather.noaa.gov/pub/SL.us008001/DF.of/DC.radar/DS.p19r0/SI.kmpx/
+            // Normalize parameters
+            site = site.ToLowerInvariant();
+            product = product.ToLowerInvariant();
+            
             var scan = new NexradScan();
+            var key = String.Format("{0}/{1}/{2}", site, product, filename);
+            
+            // Check cache and return scan if one is found
+            scan = cache.Get(key) as NexradScan;
+            if (scan != null)
+                return scan;
+            
+            // No cached scan found, go grab a new one and decode it
             var filelist = new List<string>();
             var nexradbase = "http://weather.noaa.gov/pub/SL.us008001/DF.of/DC.radar/DS.{0}/SI.{1}/{2}";
 
-            switch (product.ToLowerInvariant())
+            switch (product)
             {
                 case "n0r":
                     product = "p19r0";
@@ -57,21 +73,18 @@ namespace Capbreak.Protocol.NexradParser
                 response = await client.GetStreamAsync(endpoint);
             }
 
-            // TODO add usings for these streams
-            // For testing
-            //Stream fs = new FileStream(@"C:\Git\Capbreak\src\Capbreak\Content\Wx\Nexrad\l3test", FileMode.Open);
-
             if (response != null)
             {
-                var ms = new MemoryStream();
-                response.CopyTo(ms);
-                //fs.CopyTo(ms);
-                scan = ParseNexrad(ms);
-                ms.Close();
-                ms.Dispose();
-                //fs.Close();
-                //fs.Dispose();
+                using (var ms = new MemoryStream())
+                {
+                    response.CopyTo(ms);
+                    scan = ParseNexrad(ms);
+                }
             }
+
+            // Add scan to cache
+            policy.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(1);
+            cache.Add(key, scan, policy);
 
             return scan;
         }

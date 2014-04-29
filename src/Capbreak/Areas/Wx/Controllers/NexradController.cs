@@ -6,16 +6,62 @@ using System.Net.Http;
 using System.Web.Http;
 using Capbreak.Protocol.NexradParser;
 using Capbreak.Protocol.NexradSiteList;
+using Capbreak.Protocol.Warnings;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using Capbreak.Protocol.Models;
 using Newtonsoft.Json;
+using Capbreak.Areas.Wx.Helpers;
+using System.Drawing;
 
 namespace Capbreak.Areas.Wx.Controllers
 {
     // TODO use Web API
+    public class WarningResponse
+    {
+        public string ProductCode { get; set; }
+        public List<List<PointF>> Polygons { get; set; }
+    }
+
     public class NexradController : Controller
     {
+        public async Task<string> WarningsFeed(string type)
+        {
+            var warningService = new WarningsService();
+            var response = await warningService.FetchWarnings();
+
+            if (String.IsNullOrEmpty(type))
+                return JsonConvert.SerializeObject(response);
+
+            // User passed a type, time to filter
+            // TODO unrecognized types
+            var warningResponses = new List<WarningResponse>();
+            var codes = type.Split('|');
+            foreach (var code in codes)
+            {
+                var atomCode = code;
+                switch (code.ToLowerInvariant())
+                {
+                    case "tor":
+                        atomCode = "Tornado Warning";
+                        break;
+                }
+
+                var rawProducts = response.entry.Where(x => x.@event == atomCode);
+                var polygons = new List<List<PointF>>();
+
+                foreach (var product in rawProducts)
+                {
+                    var polygon = NexradHelpers.ConvertStringToPolygon(product.polygon);
+                    polygons.Add(polygon);
+                }
+
+                warningResponses.Add(new WarningResponse() { ProductCode = code, Polygons = polygons });
+            }
+
+            return JsonConvert.SerializeObject(warningResponses);
+        }
+
         public async Task<List<string>> List(string site, string product)
         {
             // TODO add IoC for services

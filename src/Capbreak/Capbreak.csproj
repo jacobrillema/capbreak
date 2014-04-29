@@ -189,6 +189,7 @@
     <Compile Include="Areas\Wx\Controllers\NexradController.cs" />
     <Compile Include="Areas\Wx\Controllers\PlacefileController.cs" />
     <Compile Include="Areas\Wx\Controllers\ToolsController.cs" />
+    <Compile Include="Areas\Wx\Helpers\NexradHelpers.cs" />
     <Compile Include="Areas\Wx\Models\CachedImage.cs" />
     <Compile Include="Areas\Wx\Models\CoordinateModel.cs" />
     <Compile Include="Areas\Wx\Models\MesoanalysisModel.cs" />
