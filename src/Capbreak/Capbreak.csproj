@@ -208,15 +208,18 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Shared\js\CanvasLayer.js" />
-    <Content Include="Content\Shared\js\CanvasLayerOptions.js" />
+    <Content Include="Content\Shared\css\capbreak.dusty.css" />
+    <Content Include="Content\Shared\js\capbreak.geo.js" />
     <Content Include="Content\Shared\js\capbreak.pop.js" />
+    <Content Include="Content\Shared\js\capbreak.sci.js" />
     <Content Include="Content\Shared\js\jquery-2.1.0.min.js" />
     <Content Include="Content\Shared\js\moment.min.js" />
     <Content Include="Content\Shared\js\utils.js" />
+    <Content Include="Content\Shared\js\capbreak.dusty.js" />
+    <Content Include="Content\Shared\js\capbreak.gmaps.js" />
     <Content Include="Content\Wx\Nexrad\dot.png" />
     <Content Include="Content\Wx\Nexrad\empty-dark-grey-ring-hi.png" />
-    <Content Include="Content\Wx\Nexrad\sitelist.js" />
+    <Content Include="Content\Shared\js\sitelist.js" />
     <Content Include="Content\Wx\Placefile\css\capbreak.placefile.css" />
     <Content Include="Content\Wx\Placefile\images\spc_logo.gif" />
     <Content Include="Content\Wx\Placefile\images\spc_sample.png" />

@@ -1,0 +1,61 @@
+﻿html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#dusty-status {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #222222;
+    height: 50px;
+    width: 100%;
+    z-index: 1;
+}
+
+#dusty-status > div {
+    float: left;
+}
+
+#dusty-clock {
+    color: #FFF;
+    font-family: Tahoma, Arial, Helvetica, sans-serif;
+    line-height: 50px;
+    font-size: 26px;
+    padding-left: 10px;
+}
+
+#dusty-latlon {
+    color: #FFF;
+    font-family: Tahoma, Arial, Helvetica, sans-serif;
+    line-height: 50px;
+    font-size: 16px;
+    padding-left: 20px;
+}
+
+#dusty-console {
+    width: 400px;
+    height: 100%;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background: black;
+    opacity: .6;
+}
+
+#dusty-console ol {
+    padding: 10px;
+}
+
+#dusty-console li {
+    list-style: none;
+    color: #FFF;
+    font-family: Tahoma, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}

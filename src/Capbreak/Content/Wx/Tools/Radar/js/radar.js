@@ -32,7 +32,6 @@ var polygonReduce = true;	// Enabling this cuts render time by ~100%, and has no
 var transparency = false;	// Enabling this causes a 50% performance hit
 var groupRendering = true;	// Enabling this cuts render time by 25-33%, and has no adverse display impact
 var colorTable = [ '#000', '#00EAEC', '#01A0F6', '#0000F6', '#00FF00', '#00C800', '#009000', '#FFFF00', '#E7C000', '#FF9000', '#FF0000', '#D60000', '#C00000', '#FF00FF', '#9955C9', '#FFF' ];
-//var nexradScans = [nx0, nx1, nx2, nx3, nx4, nx5, nx6, nx7, nx8, nx9, nx10, nx11, nx12];
 var totalRenderTime = 0;
 var polygonGroups = [];
 var radarRadius = 0;
@@ -83,9 +82,11 @@ function displayRadar(site, product, latlon) {
         $('body').append($('<canvas/>', { id: 'radar' }));
     }
 
+    // TODO error handling
     $.getJSON(endpoint, function (data) {
         currentScan = data;
         renderData(currentScan, latlon);
+        capbreak.dusty.log('Success: ' + data.Header.FullProductCode);
     });
 }
 
@@ -97,46 +98,19 @@ function renderData(scan, latlon) {
     renderNexrad(context, currentScan);
     var anchor = $('#html-anchor');
     anchor.append(radar);
-    radar.css('left', radar.width() / -2);
-    radar.css('top', (radar.height() / -2) - 4);  // 5px adjustment for icon/origin
+    radar.css('left', radar.attr('width') / -2);
+    radar.css('top', (radar.attr('height') / -2) - 4);  // adjustment for icon/origin
 }
 
-// Ba lat
-// ra lon
-// 
 function getBoundsInNmi() {
     var bounds = map.getBounds();
-
-    // draw polygon around bounds
-    /*var triangleCoords = [
-    new google.maps.LatLng(bounds.Ba.j, bounds.ra.j),
-    new google.maps.LatLng(bounds.Ba.j, bounds.ra.k),
-    new google.maps.LatLng(bounds.Ba.k, bounds.ra.k),
-    new google.maps.LatLng(bounds.Ba.k, bounds.ra.j),
-    new google.maps.LatLng(bounds.Ba.j, bounds.ra.j)
-    ];
-
-    // Construct the polygon for testing
-    var polygon = new google.maps.Polygon({
-        paths: triangleCoords,
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35
-    });
-
-    polygon.setMap(map);*/
-
-    // Go back to normal stuff for this function
     var km = getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.j, bounds.Ba.k, bounds.ra.k);
 
     return convertKmToNmi(km);
 }
 
 function calculateBounds(latlon) {
-    // Center the map
-    //debugger;
+    var map = capbreak.gmaps.map;
     map.setCenter(latlon);
 
     var mapcanvas = $('#map-canvas');
@@ -144,23 +118,8 @@ function calculateBounds(latlon) {
     var pxheight = mapcanvas.height();
     var pxwidth = mapcanvas.width();
     var pxdiagonal = Math.sqrt(Math.pow(pxwidth, 2) + Math.pow(pxheight, 2));
-    var nmidiagonal = convertKmToNmi(getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.j, bounds.Ba.k, bounds.ra.k));
-    var nmitop = convertKmToNmi(getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.j, bounds.Ba.j, bounds.ra.k));
-    var nmibottom = convertKmToNmi(getDistanceFromLatLonInKm(bounds.Ba.k, bounds.ra.j, bounds.Ba.k, bounds.ra.k));
-    var nmileft = convertKmToNmi(getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.j, bounds.Ba.k, bounds.ra.j));
-    var nmiright = convertKmToNmi(getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.k, bounds.Ba.k, bounds.ra.k));
-
+    var nmidiagonal = capbreak.geo.kmToNmi(capbreak.geo.distanceBetweenLatLon(bounds.Ba.j, bounds.ra.j, bounds.Ba.k, bounds.ra.k));
     var mppdiagonal = nmidiagonal / pxdiagonal;
-    var mpptop = nmitop / pxwidth;
-    var mppbottom = nmibottom / pxwidth;
-    var mppleft = nmileft / pxheight;
-    var mppright = nmiright / pxheight;
-
-    console.log('diagonal: ' + mppdiagonal);
-    console.log('top: ' + mpptop);
-    console.log('bottom: ' + mppbottom);
-    console.log('left: ' + mppleft);
-    console.log('right: ' + mppright);
 
     // TODO set all this once up higher
     var milesPerPixel = mppdiagonal;
@@ -170,40 +129,11 @@ function calculateBounds(latlon) {
     var canvasDiameter = rangeMi / milesPerPixel;
     $('canvas#radar').attr('width', canvasDiameter);
     $('canvas#radar').attr('height', canvasDiameter);
-    $('#radarbox').css('width', canvasDiameter);
-    $('#radarbox').css('height', canvasDiameter);
     width = canvasDiameter;
     height = canvasDiameter;
 
     // A zoom of 1 works perfectly with 460px diameter / 230px radius - zoom should equal ((rangeMi / milesPerPixel) / 460)
     zoom = canvasDiameter / 460;
-}
-
-function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-    var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2 - lat1);  // deg2rad below
-    var dLon = deg2rad(lon2 - lon1);
-    var a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2)
-    ;
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c; // Distance in km
-
-    return d;
-}
-
-function convertKmToMi(km) {
-    return km * 0.62137;
-}
-
-function convertKmToNmi(km) {
-    return (km / 1.852);
-}
-
-function deg2rad(deg) {
-    return deg * (Math.PI / 180)
 }
 
 function drawCircle(lat, lon) {
@@ -236,12 +166,12 @@ function renderNexrad(context, data) {
 	var now = Date.now();
 	renderComplete = false;
 	var polyCount = 0;
-	context.clearRect(0, 0, width, height);  // TODO change to actual size
+	context.clearRect(0, 0, width, height);
 	
 	for (var i = 0; i < data.Symbology.RadialData.length; i++) {
 		var radial = data.Symbology.RadialData[i];
 		var radialPosition = 0;
-		var angleDelta = radial.AngleDelta || 1;	// Always assume 1 if it's 0
+		var angleDelta = radial.AngleDelta;
 		var radialAngle = radial.StartAngle;
 
 		//if (radialAngle != 330) { continue; }	// Isolating radials for testing
@@ -264,13 +194,12 @@ function renderNexrad(context, data) {
 					(Math.sin(radians((radialAngle - 90) + angleDelta)) * radialPosition * zoom) + (height / 2.0)
 				]);
 				
-                // meow removed while testing
-				//if (polygonReduce) {
-				//	while (j < radial.ColorValues.length && (colorValue == radial.ColorValues[j + 1])) {
-				//		radialPosition++;
-				//		j++;
-				//	}
-				//}
+				if (polygonReduce) {
+					while (j < radial.ColorValues.length && (colorValue == radial.ColorValues[j + 1])) {
+						radialPosition++;
+						j++;
+					}
+				}
 				
 				polygon.push([
 					(Math.cos(radians((radialAngle - 90) + angleDelta)) * (radialPosition + 1) * zoom) + (width / 2.0),

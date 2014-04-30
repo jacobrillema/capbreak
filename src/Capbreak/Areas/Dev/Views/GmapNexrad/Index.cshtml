@@ -1,187 +1,57 @@
-﻿<style>
-    #map-canvas {
-        width: 500px;
-        height: 500px;
-        margin: 20px 0 0 0;
-        padding: 0px;
-        float: left;
-    }
+﻿@{
+    Layout = string.Empty;
+}
 
-    .map-marker-label {
-        position: absolute;
-        color: white;
-        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-        font-size: 14px;
-        font-weight: normal;
-    }
-
-    .map-marker-html {
-        position: absolute;
-    }
-
-    canvas#radar {
-        position: absolute;
-    }
-</style>
-<script src="@Url.Content("~/Content/Shared/js/jquery-2.1.0.min.js")"></script>
-<script src="@Url.Content("~/Content/Shared/js/moment.min.js")"></script>
-<script src="@Url.Content("~/Content/Shared/js/utils.js")"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-<script src="@Url.Content("~/Content/Wx/Nexrad/sitelist.js")"></script>
-<script src="@Url.Content("~/Content/Wx/Tools/Radar/js/radar.js")"></script>
-<script src="@Url.Content("~/Content/Shared/js/CanvasLayer.js")"></script>
-<script>
-    // Extend Google Maps
-    var markerSize = { x: 22, y: 40 };
-
-    google.maps.Marker.prototype.setLabel = function (label) {
-        this.label = new MarkerLabel({
-            map: this.map,
-            marker: this,
-            text: label
-        });
-        this.label.bindTo('position', this, 'position');
-    };
-
-    var MarkerLabel = function (options) {
-        this.setValues(options);
-
-        if (options.text == 'html-anchor') {
-            $('#html-anchor').remove();
-            this.div = document.createElement('div');
-            this.div.id = 'html-anchor';
-            this.div.className = 'map-marker-html';
-        }
-        else {
-            this.span = document.createElement('span');
-            this.span.className = 'map-marker-label';
-        }
-    };
-
-    MarkerLabel.prototype = $.extend(new google.maps.OverlayView(), {
-        onAdd: function () {
-            if (this.get('text') == 'html-anchor') {
-                this.getPanes().overlayImage.appendChild(this.div);
-            }
-            else {
-                this.getPanes().overlayImage.appendChild(this.span);
-            }
-            var self = this;
-            this.listeners = [google.maps.event.addListener(this, 'position_changed', function () { self.draw(); })];
-        },
-        draw: function () {
-            var text = String(this.get('text'));
-            var position = this.getProjection().fromLatLngToDivPixel(this.get('position'));
-            if (this.get('text') == 'html-anchor') {
-                this.div.style.left = position.x + 'px';
-                this.div.style.top = position.y + 'px';
-            }
-            else {
-                this.span.innerHTML = text;
-                this.span.style.left = (position.x - (markerSize.x / 2)) - (text.length * 3) + 10 + 'px';
-                this.span.style.top = (position.y - markerSize.y + 40) + 'px';
-            }
-        }
-    });
-</script>
-<script>
-    var map;
-    var markers = [];
-
-    function displayPolygons(type) {
-        var endpoint = '/wx/nexrad/warningsfeed?type=' + type;
-        
-        $.getJSON(endpoint, function (data) {
-            if (data == null || data[0] == null || data[0].Polygons == null || data[0].Polygons.length < 1) { return; }
-
-            $.each(data[0].Polygons, function () {
-                var polycoords = [];
-                $.each(this, function () {
-                    polycoords.push(new google.maps.LatLng(this.X, this.Y));
-                });
-
-                var polygon = new google.maps.Polygon({
-                    paths: polycoords,
-                    strokeColor: '#FF0000',
-                    strokeOpacity: 0.8,
-                    strokeWeight: 2,
-                    fillColor: '#FF0000',
-                    fillOpacity: 0.0,
-                    zIndex: 10,
-                    optimized: false
-                });
-
-                polygon.setMap(map);
-            });
-        });
-    }
-
-    function addMarker(latlon, label, zindex) {
-        var marker = new google.maps.Marker({
-            position: latlon,
-            map: map,
-            label: label,
-            icon: '@Url.Content("~/Content/Wx/Nexrad/dot.png")',
-            optimized: false,
-            zIndex: zindex
-        });
-
-        if (label != 'html-anchor') {
-            google.maps.event.addListener(marker, 'click', function () {
-                addMarker(latlon, 'html-anchor', 1);
-                displayRadar(label, 'n0r', latlon);
-                //drawCircle(latlon.k, latlon.A);
-            });
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/Shared/css/capbreak.dusty.css")" type="text/css" />
+    <style>
+        #map-canvas {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
 
-        markers.push(marker);
-    }
-
-    // Sets the map on all markers in the array.
-    function setAllMap(map) {
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(map);
+        .map-marker-label {
+            position: absolute;
+            color: white;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            font-size: 14px;
+            font-weight: normal;
         }
-    }
 
-    function initialize() {
-        var myLatlng = new google.maps.LatLng(40, -97);
-        var mapOptions = { zoom: 4, center: myLatlng };
-        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        .map-marker-html {
+            position: absolute;
+        }
 
-        google.maps.event.addListener(map, 'zoom_changed', function () {
-            var zoomLevel = map.getZoom();
-            console.log(zoomLevel);
-
-            // TODO play with these values
-            // BUG zooming out doesn't work right
-            // Chrome likes to crash with 6000x6000 canvases for some reason...
-            if (zoomLevel <= 9) {
-                renderData();
-            }
-            else {
-                // Use CSS to zoom
-                console.log('using CSS to zoom');
-                var radar = $('canvas#radar');
-                var width = radar.width();
-                var height = radar.height();
-                radar.width(width * 2);
-                radar.height(height * 2);
-                radar.css('left', radar.width() / -2);
-                radar.css('top', radar.height() / -2);
-            }
-        });
-
-        $.each(sitelist, function () {
-            var latlon = new google.maps.LatLng(this.Latitude, this.Longitude);
-            addMarker(latlon, this.Name, 2);
-        });
-    }
-
-    google.maps.event.addDomListener(window, 'load', initialize);
-</script>
-<div id="map-canvas"></div>
-<div id="radarbox" style="margin: 20px 0 0 20px; /*background: #000;*/ width: 460px; height: 460px; float: left; ">
+        canvas#radar {
+            position: absolute;
+        }
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script src="@Url.Content("~/Content/Shared/js/jquery-2.1.0.min.js")"></script>
+    <script src="@Url.Content("~/Content/Shared/js/moment.min.js")"></script>
+    <script src="@Url.Content("~/Content/Shared/js/utils.js")"></script>
+    <script src="@Url.Content("~/Content/Wx/Tools/Radar/js/radar.js")"></script>
+    <script src="@Url.Content("~/Content/Shared/js/sitelist.js")"></script>
+    <script src="@Url.Content("~/Content/Shared/js/capbreak.gmaps.js")"></script>
+    <script src="@Url.Content("~/Content/Shared/js/capbreak.sci.js")"></script>
+    <script src="@Url.Content("~/Content/Shared/js/capbreak.geo.js")"></script>
+</head>
+<body>
+    <div id="dusty-status">
+        <div id="dusty-clock"></div>
+        <div id="dusty-latlon"></div>
+    </div>
+    <div id="map-canvas"></div>
     <canvas id="radar" width="460" height="460"></canvas>
-</div>
-<div style="clear:both;"></div>
+    <div id="dusty-console">
+        <ol></ol>
+    </div>
+    <script src="@Url.Content("~/Content/Shared/js/capbreak.dusty.js")"></script>
+</body>
+</html>
