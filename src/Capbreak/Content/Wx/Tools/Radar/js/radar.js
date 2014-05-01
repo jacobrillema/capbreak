@@ -3,6 +3,12 @@
 ##  Radial Data: Page 3-113; Figure 3-10
 ##  NWS Data Management: http://www.nws.noaa.gov/datamgmt/filstnd.html#ds
 ##  PHP NEXRAD DECODER: https://github.com/johncharrell/WSR-88D/blob/master/classes/NexradDecoder.php
+
+National radar image: http://radblast.wunderground.com/cgi-bin/radar/WUNIDS_composite?maxlat=56.06451455312292&maxlon=-62.83375000000001&minlat=15.101545157982086&minlon=-133.14625&type=00Q&frame=0&num=1&delay=25&width=800&height=600&png=0&smooth=1&min=0&noclutter=1&rainsnow=1&nodebug=0&theext=.gif&merge=elev&reproj.automerc=1&timelabel=1&timelabel.x=200&timelabel.y=12&brand=wundermap&rand=9076
+http://mesonet.agron.iastate.edu/GIS/ridge.phtml
+http://mesonet.agron.iastate.edu/data/gis/images/4326/USCOMP/n0r_0.png
+http://radar.weather.gov/ridge/kmzgenerator.php
+
 */
 
 /*

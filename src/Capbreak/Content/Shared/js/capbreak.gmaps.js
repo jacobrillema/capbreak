@@ -1,6 +1,5 @@
 ﻿var capbreak = capbreak || {};
 capbreak.gmaps = {};
-
 capbreak.gmaps.markerSize = { x: 22, y: 40 };
 capbreak.gmaps.map = null;
 capbreak.gmaps.markers = [];
@@ -52,16 +51,91 @@ capbreak.gmaps.addMarker = function (latlon, label, zindex) {
             capbreak.gmaps.displayRadar = true;
             capbreak.dusty.log('Fetching product N0R for ' + label + '...');
             displayRadar(label, 'n0r', latlon);
-            //drawCircle(latlon.k, latlon.A);
         });
     }
 
-    capbreak.gmaps.markers.push(marker);
+    capbreak.gmaps.nexradSiteMarkers.push(marker);
 };
 
 capbreak.gmaps.setAllMap = function () {
     for (var i = 0; i < capbreak.gmaps.markers.length; i++) {
         capbreak.gmaps.markers[i].setMap(capbreak.gmaps.map);
+    }
+};
+
+// TODO load sites async - only do once a month, save to localstorage
+capbreak.gmaps.nexradSiteMarkers = [];
+capbreak.gmaps.toggleNexradSites = function () {
+    if (capbreak.gmaps.nexradSiteMarkers == null || !capbreak.gmaps.nexradSiteMarkers.length) {
+        capbreak.dusty.log('Loading WSR-88D sites');
+        $.each(sitelist, function () {
+            var latlon = new google.maps.LatLng(this.Latitude, this.Longitude);
+            capbreak.gmaps.addMarker(latlon, this.Name, 2);
+        });
+    }
+
+    var markers = capbreak.gmaps.nexradSiteMarkers;
+    if (markers[0].map == null) {
+        $.each(markers, function () {
+            this.map = capbreak.gmaps.map;
+        });
+    }
+    else {
+        $.each(markers, function () {
+            this.map = null;
+        });
+    }
+};
+
+capbreak.gmaps.locationMarker = null;
+capbreak.gmaps.toggleLocation = function () {
+    if (capbreak.gmaps.locationMarker == null) {
+        var latlon = new google.maps.LatLng(capbreak.dusty.location.latitude, capbreak.dusty.location.longitude);
+        capbreak.gmaps.locationMarker = new google.maps.Marker({
+            position: latlon,
+            icon: '/Content/Shared/images/location-icon.png'
+        });
+    }
+
+    if (capbreak.gmaps.locationMarker.map == null) {
+        capbreak.dusty.log('Displaying location');
+        capbreak.gmaps.locationMarker.setMap(capbreak.gmaps.map);
+    }
+    else {
+        capbreak.dusty.log('Removing location');
+        capbreak.gmaps.locationMarker.setMap(null);
+    }
+};
+capbreak.gmaps.updateLocation = function () {
+    if (capbreak.gmaps.locationMarker != null) {
+        var latlon = new google.maps.LatLng(capbreak.dusty.location.latitude, capbreak.dusty.location.longitude);
+        capbreak.gmaps.locationMarker.position = latlon;
+
+        // TODO check to see if this actually updates or is even needed
+        if (capbreak.gmaps.locationMarker.map != null) {
+            capbreak.gmaps.locationMarker.setMap(map);
+        }
+    }
+}
+
+capbreak.gmaps.nationalRadarOverlay = null;
+capbreak.gmaps.toggleNationalRadar = function () {
+    if (capbreak.gmaps.nationalRadarOverlay == null) {
+        var imgurl = 'http://radar.weather.gov/ridge/Conus/RadarImg/latest_radaronly.gif';
+        var imgbounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng(21.652538062803, -127.620375523875420),
+            new google.maps.LatLng(50.406626367301044, -66.517937876818)
+        );
+        capbreak.gmaps.nationalRadarOverlay = new google.maps.GroundOverlay(imgurl, imgbounds);
+    }
+    
+    if (capbreak.gmaps.nationalRadarOverlay.map == null) {
+        capbreak.dusty.log('Displaying national radar');
+        capbreak.gmaps.nationalRadarOverlay.setMap(capbreak.gmaps.map);
+    }
+    else {
+        capbreak.dusty.log('Removing national radar');
+        capbreak.gmaps.nationalRadarOverlay.setMap(null);
     }
 };
 
@@ -76,6 +150,7 @@ capbreak.gmaps.init = function () {
 
         if (capbreak.gmaps.displayRadar) {
             // Browsers like to crash with massive canvases, so zoom with CSS at close ranges
+            // TODO look into splitting canvases
 
             if (zoomLevel == capbreak.gmaps.radarZoomLimit && (zoomLevel < capbreak.gmaps.lastZoom)) { capbreak.dusty.log('Reverting back to pure rendering mode for radar'); }
             if (zoomLevel == (capbreak.gmaps.radarZoomLimit + 1) && (zoomLevel > capbreak.gmaps.lastZoom)) { capbreak.dusty.log('Switching to CSS zoom mode for radar'); }
@@ -107,12 +182,6 @@ capbreak.gmaps.init = function () {
 
             capbreak.gmaps.lastZoom = zoomLevel;
         }
-    });
-
-    capbreak.dusty.log('Loading WSR-88D sites');
-    $.each(sitelist, function () {
-        var latlon = new google.maps.LatLng(this.Latitude, this.Longitude);
-        capbreak.gmaps.addMarker(latlon, this.Name, 2);
     });
 };
 

@@ -23,6 +23,15 @@ body {
     float: left;
 }
 
+#dusty-hamburger {
+    width: 32px;
+    height: 32px;
+    background-image: url(/Content/Shared/images/hamburger-lightbg.png);
+    background-repeat: no-repeat;
+    margin: 8px;
+    cursor: pointer;
+}
+
 #dusty-clock {
     color: #FFF;
     font-family: Tahoma, Arial, Helvetica, sans-serif;
@@ -39,14 +48,60 @@ body {
     padding-left: 20px;
 }
 
+#dusty-network {
+    width: 32px;
+    height: 32px;
+    background-image: url(/Content/Shared/images/healthy.png);
+    background-repeat: no-repeat;
+    margin: 8px;
+    cursor: pointer;
+}
+
+#dusty-natradar {
+    color: #FFF;
+    font-family: Tahoma, Arial, Helvetica, sans-serif;
+    line-height: 50px;
+    font-size: 16px;
+    padding-left: 20px;
+    cursor: pointer;
+}
+#dusty-natradar:hover {
+    color: #C0C0C0;
+}
+
+#dusty-sites {
+    color: #FFF;
+    font-family: Tahoma, Arial, Helvetica, sans-serif;
+    line-height: 50px;
+    font-size: 16px;
+    padding-left: 20px;
+    cursor: pointer;
+}
+#dusty-sites:hover {
+    color: #C0C0C0;
+}
+
+#dusty-location {
+    color: #FFF;
+    font-family: Tahoma, Arial, Helvetica, sans-serif;
+    line-height: 50px;
+    font-size: 16px;
+    padding-left: 20px;
+    cursor: pointer;
+}
+#dusty-location:hover {
+    color: #C0C0C0;
+}
+
 #dusty-console {
-    width: 400px;
+    width: 350px;
     height: 100%;
     position: absolute;
     top: 50px;
     left: 0;
     background: black;
     opacity: .6;
+    display: none;
 }
 
 #dusty-console ol {

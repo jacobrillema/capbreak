@@ -209,6 +209,15 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Shared\css\capbreak.dusty.css" />
+    <Content Include="Content\Shared\images\01 icon_online.png" />
+    <Content Include="Content\Shared\images\02 icon_failover.png" />
+    <Content Include="Content\Shared\images\03 icon_offline.png" />
+    <Content Include="Content\Shared\images\hamburger-lightbg.png" />
+    <Content Include="Content\Shared\images\healthy.png" />
+    <Content Include="Content\Shared\images\issues.png" />
+    <Content Include="Content\Shared\images\location-icon.png" />
+    <Content Include="Content\Shared\images\location.png" />
+    <Content Include="Content\Shared\images\offline.png" />
     <Content Include="Content\Shared\js\capbreak.geo.js" />
     <Content Include="Content\Shared\js\capbreak.pop.js" />
     <Content Include="Content\Shared\js\capbreak.sci.js" />

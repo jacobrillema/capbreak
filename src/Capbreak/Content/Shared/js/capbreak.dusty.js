@@ -14,7 +14,8 @@ capbreak.dusty.log = function (msg) {
 // TODO handle no support
 capbreak.dusty.updateLocation = function (position) {
     capbreak.dusty.location = { latitude: position.coords.latitude, longitude: position.coords.longitude };
-    $('#dusty-latlon').text(capbreak.dusty.location.latitude + ', ' + capbreak.dusty.location.longitude);
+    $('#dusty-latlon').text(capbreak.dusty.location.latitude.toFixed(2) + ', ' + capbreak.dusty.location.longitude.toFixed(2));
+    capbreak.dusty.log('Updated location');
 };
 
 (function () {
@@ -43,11 +44,31 @@ capbreak.dusty.updateLocation = function (position) {
     }, 60000);
     navigator.geolocation.getCurrentPosition(capbreak.dusty.updateLocation, null, { enableHighAccuracy: true } );
 
-    // Binding
+    // Bindings
     $(document).bind('keypress', function (e) {
         if (e.which == 96) {
             $('#dusty-console').slideToggle();
         }
+    });
+
+    $('#dusty-hamburger').click(function () {
+        $('#dusty-console').slideToggle();
+    });
+
+    $('#dusty-console').click(function () {
+        $('#dusty-console').slideToggle();
+    });
+
+    $('#dusty-natradar').click(function () {
+        capbreak.gmaps.toggleNationalRadar();
+    });
+
+    $('#dusty-location').click(function () {
+        capbreak.gmaps.toggleLocation();
+    });
+
+    $('#dusty-sites').click(function () {
+        capbreak.gmaps.toggleNexradSites();
     });
 
     google.maps.event.addDomListener(window, 'load', capbreak.gmaps.init);
