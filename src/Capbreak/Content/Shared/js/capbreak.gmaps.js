@@ -6,6 +6,7 @@ capbreak.gmaps.markers = [];
 capbreak.gmaps.lastZoom = 6;
 capbreak.gmaps.displayRadar = false;
 capbreak.gmaps.radarZoomLimit = 9;
+capbreak.gmaps.activeNexradSite = null;
 
 capbreak.gmaps.displayPolygon = function (type) {
     var endpoint = '/wx/nexrad/warningsfeed?type=' + type;
@@ -38,8 +39,8 @@ capbreak.gmaps.displayPolygon = function (type) {
 capbreak.gmaps.addMarker = function (latlon, label, zindex) {
     var marker = new google.maps.Marker({
         position: latlon,
-        map: capbreak.gmaps.map,
         label: label,
+        map: capbreak.gmaps.map,
         icon: '/Content/Wx/Nexrad/dot.png',
         optimized: false,
         zIndex: zindex
@@ -49,18 +50,15 @@ capbreak.gmaps.addMarker = function (latlon, label, zindex) {
         google.maps.event.addListener(marker, 'click', function () {
             capbreak.gmaps.addMarker(latlon, 'html-anchor', 1);
             capbreak.gmaps.displayRadar = true;
+            // TODO need to redo all of this and get it in one place
             capbreak.dusty.log('Fetching product N0R for ' + label + '...');
             displayRadar(label, 'n0r', latlon);
+            capbreak.gmaps.activeNexradSite = capbreak.nexrad.sites[label.toLowerCase()];
+            capbreak.gmaps.activeNexradSite.lastUpdate = new Date().getTime();
         });
     }
 
     capbreak.gmaps.nexradSiteMarkers.push(marker);
-};
-
-capbreak.gmaps.setAllMap = function () {
-    for (var i = 0; i < capbreak.gmaps.markers.length; i++) {
-        capbreak.gmaps.markers[i].setMap(capbreak.gmaps.map);
-    }
 };
 
 // TODO load sites async - only do once a month, save to localstorage
@@ -73,17 +71,18 @@ capbreak.gmaps.toggleNexradSites = function () {
             capbreak.gmaps.addMarker(latlon, this.Name, 2);
         });
     }
-
-    var markers = capbreak.gmaps.nexradSiteMarkers;
-    if (markers[0].map == null) {
-        $.each(markers, function () {
-            this.map = capbreak.gmaps.map;
-        });
-    }
     else {
-        $.each(markers, function () {
-            this.map = null;
-        });
+        var markers = capbreak.gmaps.nexradSiteMarkers;
+        if (markers[0].map == null) {
+            $.each(markers, function () {
+                this.setMap(capbreak.gmaps.map);
+            });
+        }
+        else {
+            $.each(markers, function () {
+                this.setMap(null);
+            });
+        }
     }
 };
 
@@ -185,16 +184,16 @@ capbreak.gmaps.init = function () {
     });
 };
 
+// Extending Google Maps
 (function () {
     google.maps.Marker.prototype.setLabel = function (label) {
         this.label = new MarkerLabel({
-            map: this.map,
+            map: capbreak.gmaps.map,
             marker: this,
             text: label
         });
         this.label.bindTo('position', this, 'position');
     };
-
     var MarkerLabel = function (options) {
         this.setValues(options);
 
@@ -209,7 +208,6 @@ capbreak.gmaps.init = function () {
             this.span.className = 'map-marker-label';
         }
     };
-
     MarkerLabel.prototype = $.extend(new google.maps.OverlayView(), {
         onAdd: function () {
             if (this.get('text') == 'html-anchor') {

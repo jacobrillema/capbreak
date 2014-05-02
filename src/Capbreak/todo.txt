@@ -1,0 +1,16 @@
+﻿BUGS
+Page snaps back to radar on every update - even if not a new file
+Fix Google Maps page offset and icons
+
+FEATURES
+Add updating logic in service calls for radar
+Add GPS status indicator
+Add network status indicator
+Add METARs
+Add Watches/Warnings/MDs/Outlooks
+Add BV/SRV/HCA products
+Add animations
+Add Google Routing
+Add all L3 products
+Color nexrad site dots by L3 status
+Add L2 products

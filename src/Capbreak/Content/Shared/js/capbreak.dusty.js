@@ -11,11 +11,27 @@ capbreak.dusty.log = function (msg) {
     $('#dusty-console ol').append('<li>[' + capbreak.dusty.timestampUtc() + '] ' + msg + '</li>');
 };
 
-// TODO handle no support
+// TODO handle no support for geolocation
 capbreak.dusty.updateLocation = function (position) {
     capbreak.dusty.location = { latitude: position.coords.latitude, longitude: position.coords.longitude };
     $('#dusty-latlon').text(capbreak.dusty.location.latitude.toFixed(2) + ', ' + capbreak.dusty.location.longitude.toFixed(2));
     capbreak.dusty.log('Updated location');
+};
+
+// Events object and loop timer
+capbreak.dusty.events = [];
+capbreak.dusty.events.timer = setInterval(function () { capbreak.dusty.processEvents(); }, 1000);
+capbreak.dusty.processEvents = function () {
+    var now = new Date().getTime();
+
+    // Check to see if radar needs updating
+    if (capbreak.gmaps != null && capbreak.gmaps.activeNexradSite != null) {
+        var site = capbreak.gmaps.activeNexradSite;
+        var lastUpdate = site.lastUpdate;
+        if (lastUpdate == null || ((now - lastUpdate) > 60000)) {
+            displayRadar(site.name, 'n0r', new google.maps.LatLng(site.latitude, site.longitude));
+        }
+    }
 };
 
 (function () {
@@ -32,9 +48,9 @@ capbreak.dusty.updateLocation = function (position) {
         .css('width', screenWidth)
         .css('height', screenHeight);
 
-    // Object creation
+    // ==TIMERS==
     // Clock timer
-    setInterval(updateClock(), 500);
+    setInterval(function () { updateClock(); }, 500);
 
     // Location timer
     setInterval(function () {

@@ -27,6 +27,12 @@ http://radar.weather.gov/ridge/kmzgenerator.php
 // Hide/show canvas performance: http://jsperf.com/jquery-show-hide-vs-css-display-none-block/3
 // Bitwise operators on the lineTo methods is good for 10% performance gain: http://jsperf.com/jquery-show-hide-vs-css-display-none-block/3
 // Unfortunately there are slight gaps in the data when rendered ^
+
+var capbreak = capbreak || {};
+capbreak.nexrad = {};
+capbreak.nexrad.sites = {};
+
+// TODO move all this to a namespace
 var mouseMove = false;
 var mouseEvent = null;
 var mouseElement = null;
@@ -81,16 +87,36 @@ if (header.getProductCode() == NexradHeader.L3PC_TDWR_LONG_RANGE_BASE_REFLECTIVI
         }*/
 
 function displayRadar(site, product, latlon) {
+    if (capbreak.nexrad.sites[site.toLowerCase()] == null) {
+        capbreak.nexrad.sites[site.toLowerCase()] = {
+            name: site,
+            latitude: latlon.k,
+            longitude: latlon.A,
+            scans: {}
+        };
+    }
+    
+    var currentSite = capbreak.nexrad.sites[site.toLowerCase()];
+
     // http://capbreak.com/wx/nexrad/latest?site=kmpx&product=n0r
     var endpoint = '/wx/nexrad/latest?site=' + site + '&product=' + product;
+
+    currentSite.scans[product.toLowerCase()] = currentSite.scans[product.toLowerCase()] || [];
 
     if (!$('canvas#radar').length) {
         $('body').append($('<canvas/>', { id: 'radar' }));
     }
 
     // TODO error handling
+    // TODO use active nexrad site everywhere?
     $.getJSON(endpoint, function (data) {
+        capbreak.gmaps.activeNexradSite.lastUpdate = new Date().getTime();
         currentScan = data;
+        if (!currentSite.scans[product.toLowerCase()].length ||
+                (data.Descriptor.ScanNumber != currentSite.scans[product.toLowerCase()].slice(-1)[0].Descriptor.ScanNumber)) {
+            capbreak.dusty.log('Downloaded new radar scan: ' + data.Header.FullProductCode);
+            currentSite.scans[product.toLowerCase()].push(currentScan);
+        }
         renderData(currentScan, latlon);
         capbreak.dusty.log('Success: ' + data.Header.FullProductCode);
     });
@@ -109,7 +135,7 @@ function renderData(scan, latlon) {
 }
 
 function getBoundsInNmi() {
-    var bounds = map.getBounds();
+    var bounds = capbreak.gmaps.map.getBounds();
     var km = getDistanceFromLatLonInKm(bounds.Ba.j, bounds.ra.j, bounds.Ba.k, bounds.ra.k);
 
     return convertKmToNmi(km);
