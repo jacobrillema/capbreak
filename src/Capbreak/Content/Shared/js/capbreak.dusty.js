@@ -87,5 +87,9 @@ capbreak.dusty.processEvents = function () {
         capbreak.gmaps.toggleNexradSites();
     });
 
+    $('#dusty-metars').click(function () {
+        capbreak.gmaps.toggleMetars();
+    });
+
     google.maps.event.addDomListener(window, 'load', capbreak.gmaps.init);
 })();

@@ -9,6 +9,16 @@ String.prototype.hashCode = function(){
     return hash;
 };
 
+String.format = function () {
+    var s = arguments[0];
+    for (var i = 0; i < arguments.length - 1; i++) {
+        var reg = new RegExp("\\{" + i + "\\}", "gm");
+        s = s.replace(reg, arguments[i + 1]);
+    }
+
+    return s;
+}
+
 /**
  * ReplaceAll by Fagner Brack (MIT Licensed)
  * Replaces all occurrences of a substring in a string

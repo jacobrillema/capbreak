@@ -115,7 +115,7 @@ capbreak.gmaps.updateLocation = function () {
             capbreak.gmaps.locationMarker.setMap(map);
         }
     }
-}
+};
 
 capbreak.gmaps.nationalRadarOverlay = null;
 capbreak.gmaps.toggleNationalRadar = function () {
@@ -135,6 +135,40 @@ capbreak.gmaps.toggleNationalRadar = function () {
     else {
         capbreak.dusty.log('Removing national radar');
         capbreak.gmaps.nationalRadarOverlay.setMap(null);
+    }
+};
+
+capbreak.gmaps.metarMarkers = [];
+capbreak.gmaps.toggleMetars = function () {
+    if (capbreak.gmaps.metarMarkers == null || !capbreak.gmaps.metarMarkers.length) {
+        var endpoint = '/nexrad/metarfeed?state=mn';
+        capbreak.dusty.log('Loading METARs');
+        $.getJSON(endpoint, function (data) {
+            if (data == null || data.data == null || !data.data.METAR.length) { return; }
+            $.each(data.data.METAR, function () {
+                var latlon = new google.maps.LatLng(this.lat, this.lon);
+                var marker = new google.maps.Marker({
+                    position: latlon,
+                    map: capbreak.gmaps.map,
+                    icon: '/content/shared/images/1x1.png',
+                    label: String.format('<span class="temp">{0}</span><span class="dewp">{1}</span>', Math.round(capbreak.sci.cToF(this.temp)), Math.round(capbreak.sci.cToF(this.dewp)))
+                });
+                capbreak.gmaps.metarMarkers.push(marker);
+            });
+        });
+    }
+    else {
+        var markers = capbreak.gmaps.metarMarkers;
+        if (markers[0].map == null) {
+            $.each(markers, function () {
+                this.setMap(capbreak.gmaps.map);
+            });
+        }
+        else {
+            $.each(markers, function () {
+                this.setMap(null);
+            });
+        }
     }
 };
 
@@ -228,8 +262,10 @@ capbreak.gmaps.init = function () {
             }
             else {
                 this.span.innerHTML = text;
-                this.span.style.left = (position.x - (capbreak.gmaps.markerSize.x / 2)) - (text.length * 3) + 10 + 'px';
-                this.span.style.top = (position.y - capbreak.gmaps.markerSize.y + 40) + 'px';
+                //this.span.style.left = (position.x - (capbreak.gmaps.markerSize.x / 2)) - (text.length * 3) + 10 + 'px';
+                //this.span.style.top = (position.y - capbreak.gmaps.markerSize.y + 40) + 'px';
+                this.span.style.left = position.x + 'px';
+                this.span.style.top = position.y + 'px';
             }
         }
     });

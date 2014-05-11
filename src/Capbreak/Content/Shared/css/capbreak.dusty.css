@@ -9,6 +9,22 @@ body {
     overflow: hidden;
 }
 
+.temp {
+    font-family: Tahoma, Arial, Helvetica, sans-serif;
+    font-size: 9px;
+    color: red;
+    text-shadow: none;
+}
+.dewp {
+    font-family: Tahoma, Arial, Helvetica, sans-serif;
+    font-size: 9px;
+    color: green;
+    text-shadow: none;
+    position: absolute;
+    top: 15px;
+    left: 0;
+}
+
 #dusty-status {
     position: absolute;
     top: 0;
@@ -90,6 +106,18 @@ body {
     cursor: pointer;
 }
 #dusty-location:hover {
+    color: #C0C0C0;
+}
+
+#dusty-metars {
+    color: #FFF;
+    font-family: Tahoma, Arial, Helvetica, sans-serif;
+    line-height: 50px;
+    font-size: 16px;
+    padding-left: 20px;
+    cursor: pointer;
+}
+#dusty-metars:hover {
     color: #C0C0C0;
 }
 

@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.IO;
 using System.Web.Http;
 using Capbreak.Protocol.NexradParser;
 using Capbreak.Protocol.NexradSiteList;
 using Capbreak.Protocol.Warnings;
+using Capbreak.Protocol.Metar;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using Capbreak.Protocol.Models;
 using Newtonsoft.Json;
 using Capbreak.Areas.Wx.Helpers;
 using System.Drawing;
+using ICSharpCode.SharpZipLib.BZip2;
+using System.Text;
 
 namespace Capbreak.Areas.Wx.Controllers
 {
@@ -25,6 +29,26 @@ namespace Capbreak.Areas.Wx.Controllers
 
     public class NexradController : Controller
     {
+        public ActionResult TestBzip()
+        {
+            try
+            {
+                const string test = "hello world";
+                Stream inS = new MemoryStream(Encoding.ASCII.GetBytes(test ?? ""));
+                Stream outS = new MemoryStream();
+                BZip2.Compress(inS, outS, false, 9);
+                outS.Position = 0;
+                var reader = new StreamReader(outS);
+                var text = reader.ReadToEnd();
+            }
+            catch (Exception ex)
+            {
+                var meow = ex;
+            }
+
+            return null;
+        }
+
         public async Task<string> WarningsFeed(string type)
         {
             var warningService = new WarningsService();
@@ -60,6 +84,20 @@ namespace Capbreak.Areas.Wx.Controllers
             }
 
             return JsonConvert.SerializeObject(warningResponses);
+        }
+
+        public async Task<string> MetarFeed(string state, string hash)
+        {
+            const bool UseBzipCompression = true;
+            var metarservice = new MetarService();
+            var metars = await metarservice.FetchMetars(state, hash);
+
+            if (UseBzipCompression)
+            {
+
+            }
+
+            return JsonConvert.SerializeObject(metars);
         }
 
         public async Task<List<string>> List(string site, string product)

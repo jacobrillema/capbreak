@@ -52,6 +52,10 @@
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -128,9 +132,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.Http.WebHost">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.0.0\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
@@ -215,12 +216,14 @@
     <Content Include="Content\Shared\images\01 icon_online.png" />
     <Content Include="Content\Shared\images\02 icon_failover.png" />
     <Content Include="Content\Shared\images\03 icon_offline.png" />
+    <Content Include="Content\Shared\images\1x1.png" />
     <Content Include="Content\Shared\images\hamburger-lightbg.png" />
     <Content Include="Content\Shared\images\healthy.png" />
     <Content Include="Content\Shared\images\issues.png" />
     <Content Include="Content\Shared\images\location-icon.png" />
     <Content Include="Content\Shared\images\location.png" />
     <Content Include="Content\Shared\images\offline.png" />
+    <Content Include="Content\Shared\js\bzip2.js" />
     <Content Include="Content\Shared\js\capbreak.geo.js" />
     <Content Include="Content\Shared\js\capbreak.pop.js" />
     <Content Include="Content\Shared\js\capbreak.sci.js" />
